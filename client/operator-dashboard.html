@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Centre Operator Dashboard — Fasal Setu</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header class="nav">
+            <div class="container nav-inner">
+                <a class="brand" href="index.html">
+                    <svg class="brand-mark" viewBox="0 0 34 34">
+                        <circle cx="17" cy="17" r="16" fill="#2a5945"/>
+                        <path d="M17 27V12" stroke="#9dd0b6" stroke-width="2"/>
+                        <path d="M17 14C10 14 9 9 10 7c6 0 8 4 7 7Z" fill="#eda335"/>
+                        <path d="M17 18c7-1 8-5 7-8-6 0-8 4-7 8Z" fill="#9dd0b6"/>
+                    </svg>Fasal Setu
+                </a>
+                <div class="nav-actions">
+                    <span class="user-chip" style="font-size:0.875rem;font-weight:600;color:var(--green-950);background:var(--paper);padding:6px 14px;border-radius:20px;border:1px solid rgba(0,0,0,0.08)">
+                        👤 <span data-user-name>Centre Operator</span>
+                    </span>
+                    <button class="lang" onclick="toggleLanguage()" data-lang-label>EN</button>
+                    <button class="btn btn-outline btn-small" data-logout>Log out</button>
+                </div>
+            </div>
+        </header>
+        <div class="dashboard-shell">
+            <aside class="sidebar">
+                <div class="side-brand">Centre Operator</div>
+                <div class="side-section">Centre Operations</div>
+                <button class="side-link active" data-section="overview">⌂ Dashboard</button>
+                <button class="side-link" data-section="operatorQueue">◉ Today's Queue</button>
+                <button class="side-link" data-section="checkin">▣ Check-in</button>
+                <button class="side-link" data-section="quality">✓ Quality Check</button>
+                <button class="side-link" data-section="weighment">⚖ Weighment</button>
+                <button class="side-link" data-section="procurement">₹ Procurement</button>
+                <button class="side-link" data-section="centreStatus">● Centre Status</button>
+                <button class="side-link" data-section="reports">▤ Reports</button>
+                <div class="side-section">Account</div>
+                <button class="side-link" data-section="profile">👤 Operator Profile</button>
+            </aside>
+            <main class="dash-main">
+                <div class="dash-header" id="operatorHeaderBanner">
+                    <div>
+                        <div class="eyebrow">PROCUREMENT CENTRE CONSOLE</div>
+                        <h1 id="headerCentreTitle">Loading assigned centre…</h1>
+                        <p id="headerCentreMeta">Fetching details from MongoDB…</p>
+                    </div>
+                </div>
+
+                <!-- OVERVIEW / DASHBOARD -->
+                <section id="section-overview" class="dash-section">
+                    <div id="overviewContent"></div>
+                </section>
+
+                <!-- TODAY'S QUEUE -->
+                <section id="section-operatorQueue" class="dash-section hidden">
+                    <div class="dash-header">
+                        <div>
+                            <div class="eyebrow">TODAY'S QUEUE</div>
+                            <h1>Manage centre queue & farmer arrivals</h1>
+                        </div>
+                    </div>
+                    <div id="operatorQueueContent"></div>
+                </section>
+
+                <!-- CHECK-IN MODULE -->
+                <section id="section-checkin" class="dash-section hidden">
+                    <div class="checkin-card card">
+                        <div class="checkin-head">
+                            <h3>Gate check-in — scan farmer QR or enter token</h3>
+                            <span class="live-badge">Live Scanner</span>
+                        </div>
+                        <div class="checkin-shell">
+                            <div>
+                                <div class="checkin-video-wrap" id="operatorCheckinVideoWrap">
+                                    <div class="checkin-placeholder" id="operatorCheckinPlaceholder">
+                                        Camera off. Click "Start scanner" to check farmers in by scanning the QR code on their booking confirmation.
+                                    </div>
+                                    <video id="operatorCheckinVideo" playsinline muted style="display:none"></video>
+                                </div>
+                                <canvas id="operatorCheckinCanvas" style="display:none"></canvas>
+                                <button class="btn btn-outline" style="margin-top:14px" id="operatorCheckinToggleBtn" type="button">🌱 <span>Start scanner</span></button>
+                            </div>
+                            <div class="checkin-manual">
+                                <label>Or enter Token / Gate Pass ID / Mobile Number</label>
+                                <input type="text" id="checkinTokenInput" placeholder="e.g. FS-GP-4821 or farmer mobile">
+                                <button class="btn btn-primary" id="checkinManualBtn" type="button">🌱 Check in Farmer</button>
+                                <div class="checkin-log" id="checkinLog"></div>
+                            </div>
+                        </div>
+                        <div class="weighbridge-mini">
+                            <h4>Digital weighbridge slip preview</h4>
+                            <div class="weigh-grid">
+                                <div><label>Gross weight (kg)</label><input type="number" id="grossWeightInput" value="3820"></div>
+                                <div><label>Tare weight (kg)</label><input type="number" id="tareWeightInput" value="1420"></div>
+                                <button class="btn btn-outline btn-small" id="geofenceBtn" type="button">📍 Check geofence</button>
+                                <button class="btn btn-primary btn-small" id="weighSlipBtn" type="button">🌱 Generate slip</button>
+                            </div>
+                            <div id="geofenceResult"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- QUALITY CHECK MODULE -->
+                <section id="section-quality" class="dash-section hidden">
+                    <div id="qualityContent"></div>
+                </section>
+
+                <!-- WEIGHMENT MODULE -->
+                <section id="section-weighment" class="dash-section hidden">
+                    <div id="weighmentContent"></div>
+                </section>
+
+                <!-- PROCUREMENT MODULE -->
+                <section id="section-procurement" class="dash-section hidden">
+                    <div id="procurementContent"></div>
+                </section>
+
+                <!-- CENTRE STATUS MODULE -->
+                <section id="section-centreStatus" class="dash-section hidden">
+                    <div id="centreStatusContent"></div>
+                </section>
+
+                <!-- REPORTS MODULE -->
+                <section id="section-reports" class="dash-section hidden">
+                    <div id="reportsContent"></div>
+                </section>
+
+                <!-- PROFILE MODULE -->
+                <section id="section-profile" class="dash-section hidden">
+                    <div id="profileContent"></div>
+                </section>
+            </main>
+        </div>
+
+        <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
+        <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+        <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+        <script src="app.js"></script>
+        <script src="dashboard.js"></script>
+        <script>
+            let operatorScanning=false,operatorStream=null,operatorRAF=null;
+            const operatorVideo=document.getElementById('operatorCheckinVideo'),
+                  operatorCanvas=document.getElementById('operatorCheckinCanvas'),
+                  operatorPlaceholder=document.getElementById('operatorCheckinPlaceholder'),
+                  operatorToggle=document.getElementById('operatorCheckinToggleBtn'),
+                  operatorLog=document.getElementById('checkinLog');
+            const operatorCheckedIn=[];
+
+            function renderOperatorCheckinLog(){
+                operatorLog.innerHTML=operatorCheckedIn.map(x=>'<div class="checkin-row"><span>'+escD(x.token)+'</span><span>'+escD(x.source)+' · '+escD(x.time)+'</span></div>').join('')
+            }
+
+            async function submitOperatorCheckin(id,source){
+                id=String(id||'').trim();
+                if(!id){ alert('Please enter a gate pass ID, token, or 10-digit mobile number.'); return; }
+                try{
+                    const r=await dapi('/operator/checkin',{method:'POST',body:JSON.stringify({gatePassId:id.toUpperCase()})});
+                    operatorCheckedIn.unshift({token:r.data?.queue?.token||id.toUpperCase(),source,time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})});
+                    renderOperatorCheckinLog();
+                    document.getElementById('checkinTokenInput').value='';
+                    alert('✓ Farmer checked in successfully: Token '+(r.data?.queue?.token||id.toUpperCase()));
+                    if(typeof loadOperatorQueue==='function') loadOperatorQueue();
+                    if(typeof loadOverview==='function') loadOverview();
+                }catch(e){ alert(e.message); }
+            }
+
+            document.getElementById('checkinManualBtn')?.addEventListener('click',()=>submitOperatorCheckin(document.getElementById('checkinTokenInput').value,'Manual entry'));
+
+            async function startOperatorScanner(){
+                if(!navigator.mediaDevices?.getUserMedia){alert('Camera access is not supported in this browser.');return}
+                if(typeof jsQR!=='function'){alert('QR scanner library could not be loaded.');return}
+                try{operatorStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})}catch(e){alert('Camera permission was denied or the camera is unavailable.');return}
+                operatorVideo.srcObject=operatorStream;
+                operatorVideo.style.display='block';
+                operatorPlaceholder.style.display='none';
+                await operatorVideo.play();
+                operatorScanning=true;
+                operatorToggle.innerHTML='🌱 <span>Stop scanner</span>';
+                const ctx=operatorCanvas.getContext('2d');
+                let lastCode=null,lastAt=0;
+                function tick(){
+                    if(!operatorScanning)return;
+                    if(operatorVideo.readyState===operatorVideo.HAVE_ENOUGH_DATA){
+                        operatorCanvas.width=operatorVideo.videoWidth;
+                        operatorCanvas.height=operatorVideo.videoHeight;
+                        ctx.drawImage(operatorVideo,0,0,operatorCanvas.width,operatorCanvas.height);
+                        const imageData=ctx.getImageData(0,0,operatorCanvas.width,operatorCanvas.height);
+                        const code=jsQR(imageData.data,imageData.width,imageData.height);
+                        if(code?.data){
+                            const now=Date.now();
+                            if(code.data!==lastCode||now-lastAt>4000){
+                                lastCode=code.data;
+                                lastAt=now;
+                                submitOperatorCheckin(code.data,'QR scan');
+                            }
+                        }
+                    }
+                    operatorRAF=requestAnimationFrame(tick);
+                }
+                tick();
+            }
+
+            function stopOperatorScanner(){
+                operatorScanning=false;
+                if(operatorRAF)cancelAnimationFrame(operatorRAF);
+                if(operatorStream)operatorStream.getTracks().forEach(t=>t.stop());
+                operatorStream=null;
+                operatorVideo.style.display='none';
+                operatorPlaceholder.style.display='flex';
+                operatorToggle.innerHTML='🌱 <span>Start scanner</span>';
+            }
+
+            operatorToggle?.addEventListener('click',()=>operatorScanning?stopOperatorScanner():startOperatorScanner());
+
+            document.addEventListener('DOMContentLoaded',()=>{
+                document.getElementById('geofenceBtn')?.addEventListener('click',()=>document.getElementById('geofenceResult').innerHTML='<div class="success" style="margin-top:10px">✓ Geofence check passed for the assigned procurement centre.</div>');
+                document.getElementById('weighSlipBtn')?.addEventListener('click',()=>{
+                    if(!window.jspdf?.jsPDF){alert('PDF generator not loaded.');return}
+                    const {jsPDF}=window.jspdf;
+                    const gross=Number(document.getElementById('grossWeightInput').value)||0,tare=Number(document.getElementById('tareWeightInput').value)||0;
+                    const doc=new jsPDF({unit:'pt',format:[320,420]});
+                    doc.setFillColor(22,38,31);
+                    doc.rect(0,0,320,60,'F');
+                    doc.setTextColor(255,255,255);
+                    doc.setFontSize(15);
+                    doc.text('Digital Weighbridge Slip',20,34);
+                    doc.setTextColor(22,38,31);
+                    doc.setFontSize(12);
+                    let y=92;
+                    [['Gross weight',gross+' kg'],['Tare weight',tare+' kg'],['Net weight',Math.max(0,gross-tare)+' kg'],['Signed',new Date().toLocaleString('en-IN')]].forEach(([a,b])=>{
+                        doc.setFont(undefined,'bold');
+                        doc.text(a,20,y);
+                        doc.setFont(undefined,'normal');
+                        doc.text(b,165,y);
+                        y+=26;
+                    });
+                    doc.save('FasalSetu-Weighbridge-Slip.pdf');
+                });
+            });
+
+            window.FasalSetuSocket=(function(){
+                try{
+                    if(!window.io)return null;
+                    const socket=io((localStorage.getItem('fsApi')||'http://localhost:5000/api').replace(/\/api$/,''));
+                    const u=JSON.parse(localStorage.getItem('fsUser')||'null');
+                    if(u)socket.emit('joinCentre',u.id||u._id||u.centreId?._id||u.centreId);
+                    socket.on('queueUpdate',()=>{
+                        try{
+                            if(typeof loadOverview==='function') loadOverview();
+                            if(typeof loadOperatorQueue==='function') loadOperatorQueue();
+                        }catch(e){}
+                    });
+                    return socket;
+                }catch(e){return null;}
+            })();
+
+            initDashboard('OPERATOR');
+        </script>
+    </body>
+</html>

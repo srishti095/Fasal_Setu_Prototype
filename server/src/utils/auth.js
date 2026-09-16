@@ -1,0 +1,1 @@
+import jwt from 'jsonwebtoken';import {env} from '../config/env.js';export const sign=u=>jwt.sign({id:u._id.toString(),role:u.role},env.JWT_SECRET,{expiresIn:'7d'});export const verify=t=>jwt.verify(t,env.JWT_SECRET);

@@ -1,0 +1,358 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Admin / Officer Dashboard — Fasal Setu</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+</head>
+<body>
+    <header class="nav">
+        <div class="container nav-inner">
+            <a class="brand" href="index.html">
+                <svg class="brand-mark" viewBox="0 0 34 34">
+                    <circle cx="17" cy="17" r="16" fill="#2a5945"/>
+                    <path d="M17 27V12" stroke="#9dd0b6" stroke-width="2"/>
+                    <path d="M17 14C10 14 9 9 10 7c6 0 8 4 7 7Z" fill="#eda335"/>
+                    <path d="M17 18c7-1 8-5 7-8-6 0-8 4-7 8Z" fill="#9dd0b6"/>
+                </svg>
+                Fasal Setu
+            </a>
+            <div class="nav-actions">
+                <button class="lang" onclick="toggleLanguage()" data-lang-label>EN</button>
+                <button class="btn btn-outline btn-small" data-logout>Log out</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-shell">
+        <aside class="sidebar">
+            <div class="side-brand">Admin / Officer</div>
+            <div class="side-section">OPERATIONS</div>
+            <button class="side-link active" data-section="overview">⌂ Dashboard</button>
+            <button class="side-link" data-section="adminCentres">⌖ Procurement Centres</button>
+            <button class="side-link" data-section="farmers">♧ Farmers</button>
+            <button class="side-link" data-section="bookings">📅 Bookings</button>
+            <button class="side-link" data-section="procurement">🌾 Procurement</button>
+            <button class="side-link" data-section="payments">₹ Payments</button>
+            <button class="side-link" data-section="grievances">! Grievances</button>
+            <button class="side-link" data-section="reports">▤ Reports</button>
+            <button class="side-link" data-section="audit">◫ Audit Logs</button>
+
+            <div class="side-section">STAFF MANAGEMENT</div>
+            <button class="side-link" data-section="operators">👤 Operator Registration</button>
+            <button class="side-link" data-section="transporters">🚚 Transport Registration</button>
+
+            <div class="side-section">ACCOUNT</div>
+            <button class="side-link" data-section="profile">👤 Profile</button>
+        </aside>
+
+        <main class="dash-main">
+            <div class="dash-header">
+                <div>
+                    <div class="eyebrow">AUTHORISED OFFICER</div>
+                    <h1>Admin control centre</h1>
+                    <p>Manage procurement resources, staff accounts, and system operations.</p>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <section id="section-overview" class="dash-section">
+                <div id="overviewContent"></div>
+            </section>
+
+            <!-- Procurement Centres Section -->
+            <section id="section-adminCentres" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">CENTRES</div>
+                        <h1>Procurement centres</h1>
+                        <p>Configure mandi operational parameters, daily capacities, active counters, and add new procurement centres.</p>
+                    </div>
+                </div>
+
+                <!-- Add Procurement Centre Form On Top -->
+                <div class="card" style="margin-bottom:20px">
+                    <div class="eyebrow">ADD PROCUREMENT CENTRE</div>
+                    <h3 style="margin:4px 0 14px 0;color:var(--green-950)">+ Add New Procurement Centre</h3>
+                    <form id="centreForm" class="form-grid">
+                        <div><label>Centre name</label><input id="newCentreName" required placeholder="e.g. Narela Mandi Yard 4"></div>
+                        <div><label>Centre code</label><input id="newCentreCode" required pattern="[A-Za-z0-9-]+" placeholder="e.g. DL-NAR-004"></div>
+                        <div><label>Nodal Agency</label><input id="newCentreAgency" required value="NAFED / FCI" placeholder="e.g. NAFED"></div>
+                        <div><label>State</label><input id="newCentreState" required placeholder="e.g. Delhi"></div>
+                        <div><label>District</label><input id="newCentreDistrict" required placeholder="e.g. North Delhi"></div>
+                        <div><label>Address</label><input id="newCentreAddress" required placeholder="Full Mandi address"></div>
+                        <div><label>Pincode</label><input id="newCentrePincode" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required placeholder="6-digit pincode"></div>
+                        <div><label>Daily capacity (quintals)</label><input id="newCentreDaily" type="number" min="1" value="500" required></div>
+                        <div><label>Daily slots capacity</label><input id="newCentreSlots" type="number" min="1" value="50" required></div>
+                        <div><label>Counters</label><input id="newCentreCounters" type="number" min="1" value="2" required></div>
+                        <div><label>Latitude (Coordinates)</label><input id="newCentreLat" type="number" step="any" placeholder="e.g. 28.8524"></div>
+                        <div><label>Longitude (Coordinates)</label><input id="newCentreLng" type="number" step="any" placeholder="e.g. 77.0945"></div>
+                        <div class="full">
+                            <button class="btn btn-primary">+ Create Procurement Centre</button>
+                            <div id="centreFormMsg" class="small" style="margin-top:8px"></div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Registered Centres List Below -->
+                <div id="adminCentresContent"></div>
+            </section>
+
+            <!-- Operator Registration Section -->
+            <section id="section-operators" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">STAFF MANAGEMENT</div>
+                        <h1>Operator Registration</h1>
+                        <p>Create and manage Centre Operator accounts assigned to procurement centres.</p>
+                    </div>
+                </div>
+
+                <div id="operatorsContent"></div>
+
+                <div class="card" style="margin-top:16px">
+                    <div class="eyebrow">CENTRE OPERATOR REGISTRATION</div>
+                    <h3 style="margin:4px 0 14px 0;color:var(--green-950)">+ Register New Centre Operator</h3>
+                    <form id="operatorForm" class="form-grid">
+                        <div><label>Full Name</label><input id="opName" required placeholder="Full name"></div>
+                        <div><label>Email Address</label><input id="opEmail" type="email" required placeholder="Email address"></div>
+                        <div><label>Mobile Number</label><input id="opPhone" inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" required placeholder="10-digit Indian mobile"></div>
+                        <div><label>Account Password</label><input id="opPassword" type="password" minlength="6" required placeholder="Password for operator"></div>
+                        <div class="full">
+                            <label style="font-size:0.75rem;font-weight:700;color:var(--ink-soft);text-transform:uppercase">Assigned Procurement Centre</label>
+                            <select id="opCentre" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #b5c7bc;font-size:0.95rem">
+                                <option value="">Select Procurement Centre</option>
+                            </select>
+                        </div>
+                        <div class="full" style="margin-top:8px">
+                            <button class="btn btn-primary">+ Register Centre Operator</button>
+                            <div id="opMsg" class="small" style="margin-top:8px"></div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Transport Registration Section -->
+            <section id="section-transporters" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">STAFF MANAGEMENT</div>
+                        <h1>Transport Registration</h1>
+                        <p>Create and manage Transport Operator accounts for farmer trolley bookings.</p>
+                    </div>
+                </div>
+
+                <div id="transportersContent"></div>
+
+                <div class="card" style="margin-top:16px">
+                    <div class="eyebrow">TRANSPORT OPERATOR REGISTRATION</div>
+                    <h3 style="margin:4px 0 14px 0;color:var(--green-950)">+ Register New Transport Operator</h3>
+                    <form id="transportForm" class="form-grid">
+                        <div><label>Full Name</label><input id="trName" required placeholder="Full name"></div>
+                        <div><label>Email Address</label><input id="trEmail" type="email" required placeholder="Email address"></div>
+                        <div><label>Mobile Number</label><input id="trPhone" inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" required placeholder="10-digit Indian mobile"></div>
+                        <div><label>Account Password</label><input id="trPassword" type="password" minlength="6" required placeholder="Password for transporter"></div>
+                        <div><label>Service Area / Region</label><input id="trRegion" required placeholder="Service area (e.g. Karnal Region)"></div>
+                        <div><label>Vehicle Type</label><input id="trVehicleType" required value="Tractor Trolley" placeholder="Vehicle type"></div>
+                        <div><label>Vehicle Number</label><input id="trVehicleNo" required placeholder="Vehicle number (e.g. HR-05-AB-1234)"></div>
+                        <div><label>Trolley Capacity (Quintals)</label><input id="trCapacity" type="number" min="1" required value="40" placeholder="Capacity in qtl"></div>
+                        <div><label>Fare Per Trip (₹)</label><input id="trFare" type="number" min="0" required value="500" placeholder="Fare per trip (₹)"></div>
+                        <div class="full" style="display:flex;align-items:center;margin-top:4px">
+                            <label style="display:flex;gap:8px;align-items:center;cursor:pointer">
+                                <input id="trListed" type="checkbox" checked style="width:18px;height:18px"> List this transporter for farmer trolley bookings
+                            </label>
+                        </div>
+                        <div class="full" style="margin-top:8px">
+                            <button class="btn btn-primary">+ Register Transport Operator</button>
+                            <div id="trMsg" class="small" style="margin-top:8px"></div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Farmers Management Section -->
+            <section id="section-farmers" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">FARMERS</div>
+                        <h1>Farmer registry & details</h1>
+                    </div>
+                </div>
+                <div id="farmersContent"></div>
+            </section>
+
+            <!-- Bookings Management Section -->
+            <section id="section-bookings" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">BOOKINGS</div>
+                        <h1>All Mandi Bookings</h1>
+                    </div>
+                </div>
+                <div id="adminBookingsContent"></div>
+            </section>
+
+            <!-- Procurement Monitoring Section -->
+            <section id="section-procurement" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">PROCUREMENT</div>
+                        <h1>Procurement Monitoring</h1>
+                    </div>
+                </div>
+                <div id="adminProcurementContent"></div>
+            </section>
+
+            <!-- Payments Monitoring Section -->
+            <section id="section-payments" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">PAYMENTS</div>
+                        <h1>Payment lifecycle & analytics</h1>
+                    </div>
+                </div>
+                <div id="adminPaymentsContent"></div>
+            </section>
+
+            <!-- Grievances Queue Section -->
+            <section id="section-grievances" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">GRIEVANCES</div>
+                        <h1>Farmer grievance queue</h1>
+                    </div>
+                </div>
+                <div id="adminGrievancesContent"></div>
+            </section>
+
+            <!-- System Reports Section -->
+            <section id="section-reports" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">REPORTS</div>
+                        <h1>System Operations & Reports</h1>
+                    </div>
+                </div>
+                <div id="adminReportsContent"></div>
+            </section>
+
+            <!-- Audit Logs Section -->
+            <section id="section-audit" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">AUDIT LOGS</div>
+                        <h1>Administrative audit trail</h1>
+                    </div>
+                </div>
+                <div id="adminAuditLogsContent"></div>
+            </section>
+
+            <!-- Admin Profile Section -->
+            <section id="section-profile" class="dash-section hidden">
+                <div class="dash-header">
+                    <div>
+                        <div class="eyebrow">ACCOUNT</div>
+                        <h1>Admin Officer Profile</h1>
+                        <p>Official administrator account details, security credentials, and system authority.</p>
+                    </div>
+                </div>
+                <div id="profileContent"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="dashboard.js"></script>
+    <script>initDashboard('ADMIN');</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('centreForm')?.addEventListener('submit', async e => {
+                e.preventDefault();
+                try {
+                    const lat = Number(document.getElementById('newCentreLat')?.value);
+                    const lng = Number(document.getElementById('newCentreLng')?.value);
+                    await dapi('/admin/centres', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            name: newCentreName.value,
+                            centreCode: newCentreCode.value,
+                            agency: document.getElementById('newCentreAgency')?.value || 'Configured Agency',
+                            location: {
+                                state: newCentreState.value,
+                                district: newCentreDistrict.value,
+                                address: newCentreAddress.value,
+                                pincode: newCentrePincode.value,
+                                lat: Number.isFinite(lat) ? lat : undefined,
+                                lng: Number.isFinite(lng) ? lng : undefined
+                            },
+                            capacity: {
+                                daily: Number(newCentreDaily.value),
+                                slots: Number(newCentreSlots.value),
+                                counters: Number(document.getElementById('newCentreCounters')?.value || 2)
+                            },
+                            status: 'ACTIVE'
+                        })
+                    });
+                    centreFormMsg.innerHTML = '<div class="success">Procurement centre created successfully in MongoDB!</div>';
+                    e.target.reset();
+                    loadAdminCentres();
+                } catch(x) {
+                    centreFormMsg.innerHTML = `<div class="error">${escD(x.message)}</div>`;
+                }
+            });
+
+            document.getElementById('operatorForm')?.addEventListener('submit', async e => {
+                e.preventDefault();
+                try {
+                    await dapi('/admin/staff', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            name: opName.value,
+                            email: opEmail.value,
+                            phone: opPhone.value,
+                            password: opPassword.value,
+                            role: 'OPERATOR',
+                            centreId: opCentre.value
+                        })
+                    });
+                    opMsg.innerHTML = '<div class="success">Centre Operator created! Assigned centre & login ready.</div>';
+                    e.target.reset();
+                    loadStaff();
+                } catch(x) {
+                    opMsg.innerHTML = `<div class="error">${escD(x.message)}</div>`;
+                }
+            });
+
+            document.getElementById('transportForm')?.addEventListener('submit', async e => {
+                e.preventDefault();
+                try {
+                    await dapi('/admin/staff', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            name: trName.value,
+                            email: trEmail.value,
+                            phone: trPhone.value,
+                            password: trPassword.value,
+                            role: 'LOGISTICS',
+                            region: trRegion.value,
+                            vehicleType: trVehicleType.value,
+                            vehicleNo: trVehicleNo.value,
+                            capacityQtl: Number(trCapacity.value),
+                            farePerTrip: Number(trFare.value),
+                            serviceArea: trRegion.value,
+                            isListed: trListed.checked
+                        })
+                    });
+                    trMsg.innerHTML = '<div class="success">Transport Operator created! Listed in MongoDB.</div>';
+                    e.target.reset();
+                    loadStaff();
+                } catch(x) {
+                    trMsg.innerHTML = `<div class="error">${escD(x.message)}</div>`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

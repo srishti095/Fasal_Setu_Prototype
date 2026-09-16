@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+    <head><meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Fasal Setu — Know Your Turn. Know Your Payment.</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="topbar">
+            <div class="container">
+                <span>India-wide farmer procurement navigation platform</span>
+                <span>SIH 2026 · Demonstration environment</span>
+            </div>
+        </div>
+        <header class="nav">
+            <div class="container nav-inner">
+                <a class="brand" href="index.html">
+                    <svg class="brand-mark" viewBox="0 0 34 34">
+                        <circle cx="17" cy="17" r="16" fill="#2a5945"/>
+                        <path d="M17 27V12" stroke="#9dd0b6" stroke-width="2"/>
+                        <path d="M17 14C10 14 9 9 10 7c6 0 8 4 7 7Z" fill="#eda335"/>
+                        <path d="M17 18c7-1 8-5 7-8-6 0-8 4-7 8Z" fill="#9dd0b6"/>
+                    </svg>Fasal Setu
+                </a>
+                <nav class="nav-links" id="navLinks">
+                    <a class="active" href="index.html" data-i18n="home">Home</a>
+                    <a href="how-it-works.html" data-i18n="how">How It Works</a>
+                    <a href="procurement-centres.html" data-i18n="centres">Procurement Centres</a>
+                    <a href="crops.html" data-i18n="crops">Crops</a>
+                    <a href="live-status.html" data-i18n="live">Live Status</a>
+                    <a href="msp-calculator.html" data-i18n="msp">MSP Calculator</a>
+                    <a href="about.html" data-i18n="help">Help</a>
+                </nav>
+                <div class="nav-actions">
+                    <button class="lang" onclick="toggleLanguage()" data-lang-label>EN</button>
+                    <button class="btn btn-outline btn-small" data-login data-i18n="login">Log in</button>
+                    <button class="btn btn-outline btn-small" data-signup>Sign up</button>
+                    <button class="menu" id="menu">☰</button>
+                </div>
+            </div>
+        </header>
+        <main>
+            <section class="hero hero-slideshow" aria-label="Fasal Setu farmer procurement journey">
+                <div class="hero-slides" aria-hidden="true">
+                    <img class="hero-slide active" src="assets/farmer-slides/image1.jpeg" alt="">
+                    <img class="hero-slide" src="assets/farmer-slides/image2.jpg" alt="">
+                    <img class="hero-slide" src="assets/farmer-slides/image4.jpg" alt="">
+                    <img class="hero-slide" src="assets/farmer-slides/images3.jfif" alt="">
+                </div>
+                <div class="hero-overlay" aria-hidden="true"></div>
+                <div class="container hero-inner">
+                    <div class="hero-copy">
+                        <div class="eyebrow">SMART PROCUREMENT JOURNEY</div>
+                        <h1>Know Your Turn. Know Your Payment.</h1>
+                        <p>Find the right procurement centre, choose a suitable slot, track your queue and follow your payment — without unnecessary waiting or uncertainty.</p>
+                        <div class="hero-actions">
+                            <a class="btn btn-primary" href="procurement-centres.html">Find My Centre</a>
+                            <a class="btn btn-outline hero-outline" href="live-status.html">Check Procurement Status</a>
+                        </div>
+                        <div class="hero-note">Fasal Setu is a farmer-first intelligent layer around existing procurement systems. Government integrations are added only through authorised interfaces.</div>
+                    </div>
+                </div>
+                <div class="hero-slide-dots" aria-hidden="true">
+                    <span class="active"></span><span></span><span></span><span></span>
+                </div>
+            </section>
+
+            <section class="market-ticker" aria-label="Crop market reference prices">
+                <div class="market-ticker-label"><span class="market-live-dot"></span><strong>Market Prices</strong><small>₹ / quintal</small></div>
+                <div class="market-ticker-window">
+                    <div class="market-ticker-track" id="marketTickerTrack">
+                        <div class="market-price-item"><strong>Mustard</strong><span>₹5,750 / qtl</span><b class="down">▼ -0.6%</b></div>
+                        <div class="market-price-item"><strong>Paddy</strong><span>₹2,250 / qtl</span><b class="up">▲ +2.1%</b></div>
+                        <div class="market-price-item"><strong>Bajra</strong><span>₹2,680 / qtl</span><b class="up">▲ +0.9%</b></div>
+                        <div class="market-price-item"><strong>Gram</strong><span>₹5,750 / qtl</span><b class="down">▼ -1.2%</b></div>
+                        <div class="market-price-item"><strong>Cotton</strong><span>₹7,480 / qtl</span><b class="up">▲ +0.4%</b></div>
+                        <div class="market-price-item"><strong>Wheat</strong><span>₹2,380 / qtl</span><b class="up">▲ +0.7%</b></div>
+                    </div>
+                </div>
+                <span class="market-demo-note">Demo reference</span>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <div class="section-head">
+                        <div>
+                            <div class="eyebrow">WHY FASAL SETU</div>
+                            <h2>Procurement should be predictable.</h2>
+                        </div>
+                        <p>Existing systems manage procurement. Fasal Setu helps farmers navigate it — before they leave home, while they wait, and until payment is complete.</p>
+                    </div>
+                    <div class="feature-grid">
+                        <article class="feature-card">
+                            <div class="icon-box">⌛</div>
+                            <h3>Smart queue prediction</h3>
+                            <p>See farmers ahead, estimated wait, expected turn and recommended departure.</p>
+                        </article>
+                        <article class="feature-card">
+                            <div class="icon-box">⌖</div>
+                            <h3>Better centre + slot</h3>
+                            <p>Recommend an eligible centre and time using distance, capacity, queue and conditions.</p>
+                        </article>
+                        <article class="feature-card">
+                            <div class="icon-box">◉</div>
+                            <h3>Voice + languages</h3>
+                            <p>Simple multilingual guidance for farmers who prefer voice or regional languages.</p>
+                        </article>
+                        <article class="feature-card">
+                            <div class="icon-box">₹</div>
+                            <h3>Transparent payment</h3>
+                            <p>Follow quantity, rate, bill and payment status stage by stage.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section journey">
+                <div class="container">
+                    <div class="section-head">
+                        <div>
+                            <div class="eyebrow">ONE FARMER JOURNEY</div>
+                            <h2>From crop to payment.</h2>
+                        </div>
+                        <p>One transparent timeline replaces uncertainty with clear next steps.</p>
+                    </div>
+                    <div class="journey-grid">
+                        <div class="journey-step">
+                            <div class="journey-num">1</div>
+                            <strong>Register</strong>
+                            <span>OTP verification</span>
+                        </div>
+                        <div class="journey-step">
+                            <div class="journey-num">2</div>
+                            <strong>Add crop</strong>
+                            <span>Season + quantity</span>
+                        </div>
+                        <div class="journey-step">
+                            <div class="journey-num">3</div>
+                            <strong>Book slot</strong>
+                            <span>Smart recommendation</span>
+                        </div>
+                        <div class="journey-step">
+                            <div class="journey-num">4</div>
+                            <strong>Check in</strong>
+                            <span>QR at gate</span>
+                        </div>
+                        <div class="journey-step">
+                            <div class="journey-num">5</div>
+                            <strong>Get paid</strong>
+                            <span>Track every stage</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <div class="smart-grid">
+                        <div class="smart-card">
+                            <div class="eyebrow">SMART AUTOMATION</div>
+                            <h2 style="font:600 30px var(--serif);color:var(--green-900);margin:0">Don't just find a centre. Find the better time.</h2>
+                            <div class="recommend-box">
+                                <strong>Tuesday · 10:00 AM</strong>
+                                <div style="margin-top:5px;font-weight:800">Sonepat APMC · 4.2 km</div>
+                                <div style="font-size:12px;color:var(--ink-soft);margin-top:5px">Expected wait: 28 min · recommendation is based on queue/capacity patterns.</div>
+                            </div>
+                        </div>
+                        <div class="smart-card">
+                            <div class="eyebrow">NO SMARTPHONE?</div>
+                            <h2 style="font:600 30px var(--serif);color:var(--green-900);margin:0">Stay informed through voice.</h2>
+                            <p style="color:var(--ink-soft)">The product is designed for web, SMS, IVR and missed-call assistance. The SIH prototype demonstrates the voice layer in the browser; telecom gateways can be connected through provider adapters.</p>
+                            <div class="metric-row">
+                                <div class="metric">
+                                    <small>IVR</small>
+                                    <strong>Token</strong>
+                                </div>
+                                <div class="metric">
+                                    <small>SMS</small>
+                                    <strong>Alerts</strong>
+                                </div>
+                                <div class="metric">
+                                    <small>Offline</small>
+                                    <strong>Last status</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div>
+                        <div class="brand" style="color:#fff">Fasal Setu</div>
+                        <p>From crop to payment, Fasal Setu helps farmers understand where to go, when to go, where they stand in the queue and what happens next.</p>
+                    </div>
+                    <div>
+                        <h4>Farmer</h4>
+                        <a href="#" onclick="openLogin();return false">Dashboard</a>
+                        <a href="msp-calculator.html">MSP Calculator</a>
+                        <a href="live-status.html">Live Status</a>
+                        <a href="procurement-centres.html">Find a Centre</a>
+                    </div>
+                    <div>
+                        <h4>Support</h4>
+                        <a href="about.html">Help / FAQ</a>
+                        <a href="grievance.html">Grievance</a>
+                        <a href="contact.html">Contact</a>
+                        <a href="how-it-works.html">How it works</a>
+                    </div>
+                    <div>
+                        <h4>Operations</h4>
+                        <a href="#" onclick="openLogin();return false">Centre Operator</a>
+                        <a href="#" onclick="openLogin();return false">Transport Operator</a>
+                        <a href="#" onclick="openLogin();return false">Admin / Officer</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">© 2026 Fasal Setu · Prototype for Smart India Hackathon 2026 · Demo data is not a claim of live government integration.</div>
+            </div>
+        </footer>
+        <div class="modal" id="loginModal" aria-hidden="true">
+            <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+                <div class="modal-head">
+                    <h3 id="loginTitle">Log in to Fasal Setu</h3>
+                    <button class="close" type="button" onclick="closeLogin()" aria-label="Close">×</button>
+                </div>
+                <p class="small">Use your registered email/mobile and password. Farmers sign up separately with OTP.</p>
+                <form id="loginForm" class="form-stack">
+                    <div><label>Email or mobile</label><input name="identifier" required autocomplete="username" placeholder="e.g. farmer@example.com or 9000000000"></div>
+                    <div><label>Password</label><input name="password" type="password" required autocomplete="current-password" placeholder="Enter password"></div>
+                    <div id="loginError" class="error"></div>
+                    <button class="btn btn-primary btn-block" type="submit">Log in</button>
+                </form>
+                <div style="text-align:center;margin-top:14px;font-size:12px">New farmer? <button class="btn btn-dark btn-small" type="button" onclick="openSignup()">Sign up with OTP</button></div>
+            </div>
+        </div>
+
+        <div class="modal" id="signupModal" aria-hidden="true">
+            <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+                <div class="modal-head">
+                    <h3 id="signupTitle">Farmer registration</h3>
+                    <button class="close" type="button" onclick="closeSignup()" aria-label="Close">×</button>
+                </div>
+                <p class="small">Only farmers can self-register. Centre and transport operators are created by Admin.</p>
+                <div id="signupStep1">
+                    <form id="signupForm" class="form-stack">
+                        <div><label>Full name</label><input name="name" required minlength="2" maxlength="80"></div>
+                        <div><label>Mobile number</label><input name="phone" required inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" placeholder="10-digit mobile"></div>
+                        <div><label>Email</label><input name="email" type="email" required></div>
+                        <div><label>Date of birth</label><input name="dob" type="date" required></div>
+                        <div><label>State</label><input name="state" required></div>
+                        <div><label>District</label><input name="district" required></div>
+                        <div><label>Village / locality</label><input name="village" required></div>
+                        <div><label>Address</label><input name="address" required></div>
+                        <div><label>Farmer ID / registration ID</label><input name="farmerId" required></div>
+                        <div><label>Land ownership</label><select name="landOwnership" required><option value="">Select</option><option>Owner</option><option>Tenant</option><option>Sharecropper</option></select></div>
+                        <div><label>Survey / Khasra number</label><input name="surveyNo" required></div>
+                        <div><label>Cultivated land (acres)</label><input name="landArea" type="number" min="0.01" step="0.01" required></div>
+                        <div><label>Primary crop</label><select name="crop" required><option>Wheat</option><option>Mustard</option><option>Paddy</option><option>Gram</option><option>Bajra</option><option>Cotton</option></select></div>
+                        <div><label>Expected quantity (quintals)</label><input name="expectedQuantity" type="number" min="0.01" step="0.01" required></div>
+                        <div><label>Bank name</label><input name="bankName" required></div>
+                        <div><label>Last 4 digits of account</label><input name="accountLast4" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required></div>
+                        <div><label>IFSC</label><input name="ifsc" maxlength="11" pattern="[A-Za-z]{4}0[A-Za-z0-9]{6}" required></div>
+                        <div><label>Password</label><input name="password" type="password" minlength="8" required placeholder="8+ chars, letter, number, special character"></div>
+                        <div id="signupError" class="error"></div>
+                        <button class="btn btn-primary btn-block" type="submit">Send OTP</button>
+                    </form>
+                </div>
+                <div id="signupStep2" class="hidden">
+                    <div class="hint" id="otpDemo"></div>
+                    <form id="otpForm" class="form-stack" style="margin-top:14px">
+                        <div><label>Enter OTP</label><input name="otp" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required></div>
+                        <div id="signupError2" class="error"></div>
+                        <button class="btn btn-primary btn-block" type="submit">Verify &amp; Create Farmer Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="ketan-market.js"></script>
+        
+<div class="ketan-float" id="ketanFloat">
+  <button class="ketan-float-button" id="ketanWidgetToggle" type="button" aria-expanded="false" aria-controls="ketanWidgetPanel">
+    <span class="ketan-float-avatar" aria-hidden="true">👨‍🌾</span><span class="ketan-float-name">KETAN</span><span class="ketan-float-dot"></span>
+  </button>
+  <section class="ketan-float-panel" id="ketanWidgetPanel" aria-label="KETAN AI Farmer Assistant">
+    <div class="ketan-float-head">
+      <div class="ketan-float-title"><span class="ketan-mini-avatar">👨‍🌾</span><div><strong>KETAN</strong><small>Your AI Farmer Assistant</small></div></div>
+      <button class="ketan-float-close" id="ketanWidgetClose" type="button" aria-label="Close KETAN">×</button>
+    </div>
+    <div class="ketan-float-messages" id="ketanMessages" aria-live="polite">
+      <div class="ketan-welcome-mini"><strong>Namaste! Main KETAN hoon.</strong><span>Token, centre, slot, crop, transport aur payment ke baare mein poochhiye.</span></div>
+    </div>
+    <div class="ketan-typing" id="ketanTyping" hidden><span></span><span></span><span></span> KETAN soch raha hai…</div>
+    <form class="ketan-input-row ketan-float-input" id="ketanForm">
+      <input id="ketanInput" autocomplete="off" placeholder="Apna sawal likhein…" aria-label="Ask KETAN">
+      <button type="button" id="ketanMic" class="ketan-mic" aria-label="Speak to KETAN">🎙</button>
+      <button type="submit" class="ketan-send">Send</button>
+    </form>
+    <div class="ketan-float-controls">
+      <select id="ketanLanguage" aria-label="KETAN language"><option value="hinglish">Hinglish</option><option value="hi">हिन्दी</option><option value="en">English</option></select>
+      <button type="button" class="ketan-big-voice" id="ketanBigVoice"><span>🎙</span><strong id="ketanBigVoiceLabel">Tap and speak</strong></button>
+    </div>
+    <div class="ketan-voice-status" id="ketanVoiceStatus">Hindi, Hinglish ya English mein bol sakte hain.</div>
+  </section>
+</div>
+<script src="app.js"></script><script src="ketan.js"></script>
+        <script>
+        (function(){
+            const slides=[...document.querySelectorAll('.hero-slide')];
+            const dots=[...document.querySelectorAll('.hero-slide-dots span')];
+            if(slides.length){
+                let i=0;
+                setInterval(function(){
+                    slides[i].classList.remove('active'); dots[i]?.classList.remove('active');
+                    i=(i+1)%slides.length;
+                    slides[i].classList.add('active'); dots[i]?.classList.add('active');
+                },4500);
+            }
+            ['loginModal','signupModal'].forEach(id=>{
+                const m=document.getElementById(id); if(!m)return;
+                m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
+            });
+            document.addEventListener('keydown',e=>{
+                if(e.key==='Escape'){document.getElementById('loginModal')?.classList.remove('open');document.getElementById('signupModal')?.classList.remove('open');}
+            });
+        })();
+        </script>
+    </body>
+</html>

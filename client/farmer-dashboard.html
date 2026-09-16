@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Farmer Dashboard — Fasal Setu</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header class="nav">
+            <div class="container nav-inner">
+                <a class="brand" href="index.html">
+                    <svg class="brand-mark" viewBox="0 0 34 34">
+                        <circle cx="17" cy="17" r="16" fill="#2a5945"/>
+                        <path d="M17 27V12" stroke="#9dd0b6" stroke-width="2"/>
+                        <path d="M17 14C10 14 9 9 10 7c6 0 8 4 7 7Z" fill="#eda335"/>
+                        <path d="M17 18c7-1 8-5 7-8-6 0-8 4-7 8Z" fill="#9dd0b6"/>
+                    </svg>Fasal Setu
+                </a><div class="nav-actions"><button class="lang" onclick="toggleLanguage()" data-lang-label>EN</button><button class="btn btn-outline btn-small" data-logout onclick="logout()">Log out</button></div></div></header><div class="dashboard-shell"><aside class="sidebar"><div class="side-brand">Farmer Dashboard</div><div class="side-section">My procurement</div><button class="side-link active" data-section="overview" onclick="showSection('overview')"><span class="mini">⌂</span> Dashboard</button><button class="side-link" data-section="analytics" onclick="showSection('analytics')"><span class="mini">▥</span> Analytics</button><button class="side-link" data-section="booking" onclick="showSection('booking')"><span class="mini">▣</span> Book Slot</button><button class="side-link" data-section="myBookings" onclick="showSection('myBookings')"><span class="mini">📜</span> My Bookings History</button><button class="side-link" data-section="queue" onclick="showSection('queue')"><span class="mini">◉</span> Live Queue</button><button class="side-link" data-section="centres" onclick="showSection('centres')"><span class="mini">⌖</span> Find Centre</button><button class="side-link" data-section="msp" onclick="showSection('msp')"><span class="mini">₹</span> MSP Calculator</button><button class="side-link" data-section="crops" onclick="showSection('crops')"><span class="mini">🌱</span> My crops</button><button class="side-link" data-section="payments" onclick="showSection('payments')"><span class="mini">▤</span> Payments</button><button class="side-link" data-section="trolley" onclick="showSection('trolley')"><span class="mini">🚜</span> Book Trolley</button><div class="side-section">Account & support</div><button class="side-link" data-section="profile" onclick="showSection('profile')"><span class="mini">◌</span> Profile</button><button class="side-link" data-section="grievances" onclick="showSection('grievances')"><span class="mini">!</span> Grievances</button><button class="side-link" data-section="help" onclick="showSection('help')"><span class="mini">?</span> Help</button></aside><main class="dash-main"><div class="dash-header"><div><div class="eyebrow">FARMER ACCOUNT</div><h1>Welcome, <span data-user-name>Farmer</span></h1><p>Your current procurement journey in one place.</p></div></div>
+            
+<section id="section-overview" class="dash-section"><div id="overviewContent"></div></section><section id="section-analytics" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">FARMER ANALYTICS</div><h1>Your procurement snapshot.</h1><p>See your registered crops, booking activity and payment progress in one place.</p></div></div><div id="farmerAnalyticsContent"></div></section><section id="section-booking" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">BOOK SLOT</div><h1>Choose your centre and time.</h1></div></div><div id="bookingContent"></div></section><section id="section-myBookings" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">MY BOOKINGS HISTORY</div><h1>All your procurement bookings.</h1><p>Track your upcoming, active, completed and past slot bookings.</p></div></div><div id="myBookingsList"></div></section><section id="section-queue" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">LIVE QUEUE</div><h1>Know your turn.</h1></div></div><div id="queueContent"></div></section><section id="section-centres" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">FIND CENTRE</div><h1>Nearby procurement centres.</h1></div></div><div id="centresContent"></div></section><section id="section-msp" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">MSP CALCULATOR</div><h1>Estimate your expected value.</h1></div></div><div class="calc"><form class="card form-stack" onsubmit="return false"><div><label>Crop</label><select id="dashCalcCrop"><option>Wheat</option><option>Mustard</option><option>Paddy</option><option>Gram</option><option>Bajra</option><option>Cotton</option></select></div><div><label>Quantity (quintals)</label><input id="dashCalcQty" type="number" min="0.01" step="0.01"></div><button class="btn btn-primary" onclick="dashCalculate()">Calculate expected payment</button></form><div id="dashCalcResult" class="card"><div class="empty">Enter details and click Calculate.</div></div></div></section><section id="section-profile" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">PROFILE</div><h1>Your registration details.</h1></div></div><div id="profileContent"></div></section><section id="section-crops" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">MY CROPS</div><h1>Manage your crops.</h1><p>Add the crop you plan to bring to the mandi and record its quantity and quality grade.</p></div></div><div class="crop-form card"><div class="field"><label>Crop</label><select id="newCropType"><option value="Wheat">Wheat</option><option value="Mustard">Mustard</option><option value="Paddy">Paddy</option><option value="Bajra">Bajra</option><option value="Gram">Gram</option></select></div><div class="field"><label>Quantity (qtl)</label><input type="number" id="newCropQty" min="0.01" step="0.01" placeholder="e.g. 25"></div><div class="field"><label>Quality grade</label><select id="newCropGrade"><option value="Grade A">Grade A</option><option value="Grade B">Grade B</option><option value="Ungraded">Ungraded</option></select></div><div class="field"><label>Photo</label><input type="file" id="newCropPhoto" accept="image/*"></div><button class="btn btn-primary" type="button" onclick="addFarmerCrop()">🌱 Add</button></div><div class="crop-list" id="cropList"></div><div class="card grain-card" id="farmerQualityCheckSection" style="margin-top:20px; scroll-margin-top:20px">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; border-bottom:1px solid rgba(42,89,69,0.15); padding-bottom:12px">
+    <div>
+      <span class="eyebrow" style="margin:0; color:var(--green-900)">FASAL SETU AI GRAIN INSPECTION</span>
+      <h3 style="margin:4px 0 0 0; color:var(--green-950); font-size:1.35rem">🤖 AI Grain Quality Check</h3>
+    </div>
+    <span class="status-pill status-active">Python AI Microservice Active</span>
+  </div>
+  <div id="farmerQualitySectionContent">
+    <!-- Dynamic AI Quality Check interface rendered by dashboard.js -->
+  </div>
+</div></section><section id="section-trolley" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">TRANSPORT</div><h1>Book a trolley to your centre.</h1><p>Choose a transporter listed and approved by Admin for your procurement journey.</p></div></div><div id="trolleyContent"></div></section><section id="section-payments" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">PAYMENTS</div><h1>Payment history.</h1><p>Track procurement settlements and download receipts.</p></div></div><div id="paymentsContent"></div></section><section id="section-grievances" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">GRIEVANCES</div><h1>Report a procurement issue.</h1></div></div><div id="grievanceContent"></div></section><section id="section-help" class="dash-section hidden"><div class="card"><div class="eyebrow">HELP</div><h2 style="font:600 30px var(--serif);color:var(--green-900)">Need a quick answer?</h2><p style="color:var(--ink-soft)">Use the public Help & FAQ page without losing your dashboard session.</p><a class="btn btn-primary" href="about.html">Open Help & FAQ</a></div></section></main></div><script async src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+        <script src="ketan-knowledge.js"></script>
+        <script src="ketan.js"></script><script async src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+<div class="ketan-float" id="ketanFloat">
+  <button class="ketan-float-button" id="ketanWidgetToggle" type="button" aria-expanded="false" aria-controls="ketanWidgetPanel">
+    <span class="ketan-float-avatar" aria-hidden="true">👨‍🌾</span><span class="ketan-float-name">KETAN</span><span class="ketan-float-dot"></span>
+  </button>
+  <section class="ketan-float-panel" id="ketanWidgetPanel" aria-label="KETAN AI Farmer Assistant">
+    <div class="ketan-float-head">
+      <div class="ketan-float-title"><span class="ketan-mini-avatar">👨‍🌾</span><div><strong>KETAN</strong><small>Your AI Farmer Assistant</small></div></div>
+      <button class="ketan-float-close" id="ketanWidgetClose" type="button" aria-label="Close KETAN">×</button>
+    </div>
+    <div class="ketan-float-messages" id="ketanMessages" aria-live="polite">
+      <div class="ketan-welcome-mini"><strong>Namaste! Main KETAN hoon.</strong><span>Token, centre, slot, crop, transport aur payment ke baare mein poochhiye.</span></div>
+    </div>
+    <div class="ketan-typing" id="ketanTyping" hidden><span></span><span></span><span></span> KETAN soch raha hai…</div>
+    <form class="ketan-input-row ketan-float-input" id="ketanForm">
+      <input id="ketanInput" autocomplete="off" placeholder="Apna sawal likhein…" aria-label="Ask KETAN">
+      <button type="button" id="ketanMic" class="ketan-mic" aria-label="Speak to KETAN">🎙</button>
+      <button type="submit" class="ketan-send">Send</button>
+    </form>
+    <div class="ketan-float-controls">
+      <select id="ketanLanguage" aria-label="KETAN language"><option value="hinglish">Hinglish</option><option value="hi">हिन्दी</option><option value="en">English</option></select>
+      <button type="button" class="ketan-big-voice" id="ketanBigVoice"><span>🎙</span><strong id="ketanBigVoiceLabel">Tap and speak</strong></button>
+    </div>
+    <div class="ketan-voice-status" id="ketanVoiceStatus">Hindi, Hinglish ya English mein bol sakte hain.</div>
+  </section>
+</div>
+<script src="app.js"></script><script src="dashboard.js"></script><script src="ketan.js"></script><script>function dashCalculate(){const c=document.getElementById('dashCalcCrop').value,q=Number(document.getElementById('dashCalcQty').value);if(!q||q<=0)return document.getElementById('dashCalcResult').innerHTML='<div class="notice">Enter a quantity greater than 0.</div>';dapi('/public/calculate-msp?crop='+encodeURIComponent(c)+'&quantity='+q).then(r=>document.getElementById('dashCalcResult').innerHTML='<div class="result card"><div class="eyebrow">EXPECTED PROCUREMENT VALUE</div><div class="amount">₹'+Number(r.data.expectedPayment).toLocaleString('en-IN')+'</div><div class="breakdown-row"><span>Rate</span><strong>₹'+Number(r.data.rate).toLocaleString('en-IN')+' / qtl</strong></div></div>').catch(e=>document.getElementById('dashCalcResult').innerHTML='<div class="notice">'+e.message+'</div>')}window.FasalSetuSocket=(function(){try{if(!window.io)return null;const socket=io((localStorage.getItem('fsApi')||'http://localhost:5000/api').replace(/\/api$/,''));const u=JSON.parse(localStorage.getItem('fsUser')||'null');if(u)socket.emit('joinFarmer',u.id||u._id||u.centreId);socket.on('notification',()=>{try{if(typeof loadOverview==='function'&&'FARMER'==='FARMER')loadOverview();}catch(e){}});socket.on('queueUpdate',()=>{try{if(typeof loadQueue==='function')loadQueue();if(typeof loadOperatorQueue==='function')loadOperatorQueue();}catch(e){}});return socket}catch(e){return null}})();initDashboard('FARMER');</script></body></html>
+
+

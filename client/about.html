@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Help & FAQ — Fasal Setu</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header class="nav">
+            <div class="container nav-inner">
+               <a class="brand" href="index.html">
+                    <svg class="brand-mark" viewBox="0 0 34 34">
+                        <circle cx="17" cy="17" r="16" fill="#2a5945"/>
+                        <path d="M17 27V12" stroke="#9dd0b6" stroke-width="2"/>
+                        <path d="M17 14C10 14 9 9 10 7c6 0 8 4 7 7Z" fill="#eda335"/>
+                        <path d="M17 18c7-1 8-5 7-8-6 0-8 4-7 8Z" fill="#9dd0b6"/>
+                    </svg>Fasal Setu
+                </a>
+                <nav class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="how-it-works.html">How It Works</a>
+                    <a href="procurement-centres.html">Procurement Centres</a>
+                    <a href="crops.html">Crops</a><a href="live-status.html">Live Status</a>
+                    <a href="msp-calculator.html">MSP Calculator</a>
+                    <a class="active" href="about.html">Help</a>
+                </nav>
+                <div class="nav-actions">
+                    <button class="lang" onclick="toggleLanguage()" data-lang-label>EN</button>
+                    <button class="btn btn-outline btn-small" data-login>Log in</button>
+                    <button class="btn btn-outline btn-small" data-signup>Sign up</button>
+                </div>
+            </div>
+        </header>
+        <section class="page-band"><div class="container"><div class="eyebrow">HELP & FAQ</div><h1>Clear answers, without the jargon.</h1><p>If your question isn't here, send us a message and the support team can follow up.</p></div></section><main class="section"><div class="container" style="max-width:1000px"><div class="faq"><div class="faq-item"><button class="faq-q">Do I need an Aadhaar card to register?<span class="plus">+</span></button><div class="faq-a">No. The prototype does not require an Aadhaar number. Farmer registration uses phone or email OTP and the farmer information needed for the procurement journey. Any future government identity verification would use an authorised integration.</div></div><div class="faq-item"><button class="faq-q">What happens if I miss my booked slot?<span class="plus">+</span></button><div class="faq-a">Your dashboard can show the booking as missed and guide you to the next available slot. Any rescheduling rule is controlled by the procurement programme and centre configuration.</div></div><div class="faq-item"><button class="faq-q">How is my payment amount decided?<span class="plus">+</span></button><div class="faq-a">The expected value is based on the accepted quantity and the procurement rate configured for the applicable crop/programme. The final payment depends on the actual accepted quantity and official procurement records.</div></div><div class="faq-item"><button class="faq-q">Can I sell to a trader outside my local mandi?<span class="plus">+</span></button><div class="faq-a">Fasal Setu is focused on government procurement navigation. It does not operate a private trader marketplace or decide where a farmer is legally allowed to sell.</div></div><div class="faq-item"><button class="faq-q">I don’t have a smartphone — can I still use this?<span class="plus">+</span></button><div class="faq-a">The platform is designed with assisted access in mind, including SMS, IVR and missed-call flows. In the SIH prototype, these channels are represented by provider-ready backend adapters rather than a live telecom connection.</div></div></div><div class="smart-grid" style="margin-top:55px"><div class="card"><div class="eyebrow">SEND A MESSAGE</div><h2 style="font:600 28px var(--serif);color:var(--green-900);margin:0 0 18px">Still stuck? Write to us.</h2><form id="messageForm" class="form-stack"><input name="name" required placeholder="Name"><input name="contact" required placeholder="Email or mobile"><textarea name="message" rows="6" required placeholder="Tell us what you need help with"></textarea><button class="btn btn-primary">Send message</button><div id="messageResult" class="small"></div></form></div><div class="card"><div class="eyebrow">ASSISTED CHANNELS</div><h2 style="font:600 28px var(--serif);color:var(--green-900);margin:0 0 18px">Need help without a smartphone?</h2><p style="color:var(--ink-soft)">Fasal Setu is designed for assisted farmer access through IVR, missed calls and SMS. A real telecom provider can be plugged into the backend later.</p><div class="list"><div class="list-item"><strong>☎ IVR</strong><p>Token, appointment and payment menu.</p></div><div class="list-item"><strong>◉ Assisted farmer mode</strong><p>A family member or CSC helper can guide the farmer.</p></div></div></div></div></div></main>
+<div class="ketan-float" id="ketanFloat">
+  <button class="ketan-float-button" id="ketanWidgetToggle" type="button" aria-expanded="false" aria-controls="ketanWidgetPanel">
+    <span class="ketan-float-avatar" aria-hidden="true">👨‍🌾</span><span class="ketan-float-name">KETAN</span><span class="ketan-float-dot"></span>
+  </button>
+  <section class="ketan-float-panel" id="ketanWidgetPanel" aria-label="KETAN AI Farmer Assistant">
+    <div class="ketan-float-head">
+      <div class="ketan-float-title"><span class="ketan-mini-avatar">👨‍🌾</span><div><strong>KETAN</strong><small>Your AI Farmer Assistant</small></div></div>
+      <button class="ketan-float-close" id="ketanWidgetClose" type="button" aria-label="Close KETAN">×</button>
+    </div>
+    <div class="ketan-float-messages" id="ketanMessages" aria-live="polite">
+      <div class="ketan-welcome-mini"><strong>Namaste! Main KETAN hoon.</strong><span>Token, centre, slot, crop, transport aur payment ke baare mein poochhiye.</span></div>
+    </div>
+    <div class="ketan-typing" id="ketanTyping" hidden><span></span><span></span><span></span> KETAN soch raha hai…</div>
+    <form class="ketan-input-row ketan-float-input" id="ketanForm">
+      <input id="ketanInput" autocomplete="off" placeholder="Apna sawal likhein…" aria-label="Ask KETAN">
+      <button type="button" id="ketanMic" class="ketan-mic" aria-label="Speak to KETAN">🎙</button>
+      <button type="submit" class="ketan-send">Send</button>
+    </form>
+    <div class="ketan-float-controls">
+      <select id="ketanLanguage" aria-label="KETAN language"><option value="hinglish">Hinglish</option><option value="hi">हिन्दी</option><option value="en">English</option></select>
+      <button type="button" class="ketan-big-voice" id="ketanBigVoice"><span>🎙</span><strong id="ketanBigVoiceLabel">Tap and speak</strong></button>
+    </div>
+    <div class="ketan-voice-status" id="ketanVoiceStatus">Hindi, Hinglish ya English mein bol sakte hain.</div>
+  </section>
+</div>
+<script src="app.js"></script><script src="ketan.js"></script></body></html>

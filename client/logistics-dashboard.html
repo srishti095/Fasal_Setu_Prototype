@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Transport Operator Dashboard — Fasal Setu</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header class="nav">
+            <div class="container nav-inner">
+                <a class="brand" href="index.html">
+                    <svg class="brand-mark" viewBox="0 0 34 34">
+                        <circle cx="17" cy="17" r="16" fill="#2a5945"/>
+                        <path d="M17 27V12" stroke="#9dd0b6" stroke-width="2"/>
+                        <path d="M17 14C10 14 9 9 10 7c6 0 8 4 7 7Z" fill="#eda335"/>
+                        <path d="M17 18c7-1 8-5 7-8-6 0-8 4-7 8Z" fill="#9dd0b6"/>
+                    </svg>Fasal Setu
+                </a>
+                <div class="nav-actions">
+                    <button class="lang" onclick="toggleLanguage()" data-lang-label>EN</button>
+                    <button class="btn btn-outline btn-small" data-logout>Log out</button>
+                </div>
+            </div>
+        </header>
+        <div class="dashboard-shell">
+            <aside class="sidebar"><div class="side-brand">Transport Operator</div><div class="side-section">Transport operations</div><button class="side-link active" data-section="overview">⌂ Dashboard</button><button class="side-link" data-section="transportBookings">▣ Booking Requests</button><button class="side-link" data-section="transportActive">→ Active Rides</button><button class="side-link" data-section="transportCompleted">✓ Completed</button><button class="side-link" data-section="transportEarnings">₹ Earnings</button><button class="side-link" data-section="reports">▤ Reports</button><div class="side-section">Account</div><button class="side-link" data-section="transportProfile">◌ Vehicle & Profile</button></aside><main class="dash-main"><div class="dash-header"><div><div class="eyebrow">TRANSPORT OPERATIONS</div><h1>Move procurement loads.</h1><p>View and update trips assigned to your account.</p></div></div><section id="section-overview" class="dash-section"><div id="overviewContent"></div></section><section id="section-trips" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">TRIPS</div><h1>Assigned transport trips.</h1></div></div><div id="tripsContent"></div></section><section id="section-transportBookings" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">BOOKING REQUESTS</div><h1>Farmer trolley requests.</h1><p>Accept or reject requests assigned to your listed vehicle.</p></div></div><div id="transportBookingsContent"></div></section><section id="section-transportActive" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">ACTIVE RIDES</div><h1>Manage current journeys.</h1></div></div><div id="transportActiveContent"></div></section><section id="section-transportCompleted" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">COMPLETED</div><h1>Completed trolley bookings.</h1></div></div><div id="transportCompletedContent"></div></section><section id="section-transportEarnings" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">EARNINGS</div><h1>Trip earnings.</h1></div></div><div id="transportEarningsContent"></div></section><section id="section-transportProfile" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">VEHICLE & PROFILE</div><h1>Your transport listing.</h1><p>These details are maintained by the Admin.</p></div></div><div id="transportProfileContent"></div></section><section id="section-reports" class="dash-section hidden"><div class="dash-header"><div><div class="eyebrow">REPORTS</div><h1>Transport Operations & Cargo Analytics.</h1><p>Comprehensive statistics on load movement, crop throughput, and mandi deliveries.</p></div></div><div id="transportReportsContent"></div></section></main></div><script src="app.js"></script><script src="dashboard.js"></script><script>initDashboard('LOGISTICS');</script></body></html>
