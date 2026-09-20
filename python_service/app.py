@@ -131,6 +131,10 @@ def build_grading_result(crop: str, image_count: int, metrics_list: list):
 def read_root():
     return {"status": "ACTIVE", "service": "Fasal Setu AI Grain Quality Microservice", "version": "1.0.0"}
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "service": "Fasal Setu AI Grain Quality Microservice", "version": "1.0.0"}
+
 @app.post("/analyze-json")
 def analyze_json(payload: QualityRequestJSON):
     if len(payload.images) < 5:
@@ -161,5 +165,7 @@ async def analyze_files(crop: str = Form(...), files: List[UploadFile] = File(..
     return build_grading_result(crop, len(files), metrics_list)
 
 if __name__ == "__main__":
+    import os
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
