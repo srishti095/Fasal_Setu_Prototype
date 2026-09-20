@@ -1,4 +1,4 @@
-const API_BASE=localStorage.getItem('fsApi')||'http://localhost:5000/api';
+const API_BASE=localStorage.getItem('fsApi')||(window.location.origin + '/api');
 async function dapi(path,opts={}){
   let token=localStorage.getItem('fsToken');
   let r=await fetch(API_BASE+path,{...opts,headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`}});
@@ -54,7 +54,7 @@ async function initDashboard(role){
     showSection('overview');
   }
 }
-function showSection(name){try{document.querySelectorAll('.dash-section').forEach(s=>s.classList.add('hidden'));const target=document.getElementById('section-'+name);if(target)target.classList.remove('hidden');document.querySelectorAll('.side-link[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===name));const dashMain=document.querySelector('.dash-main');if(dashMain)dashMain.scrollTop=0;window.scrollTo({top:0,behavior:'smooth'});const loaders={overview:typeof loadOverview==='function'?loadOverview:null,analytics:typeof loadFarmerAnalytics==='function'?loadFarmerAnalytics:null,profile:()=>{const r=currentUser()?.role;if(r==='OPERATOR')loadOperatorProfile();else if(r==='LOGISTICS')loadTransportProfile();else loadProfile();},centres:typeof loadCentres==='function'?loadCentres:null,adminCentres:typeof loadAdminCentres==='function'?loadAdminCentres:null,booking:typeof loadBooking==='function'?loadBooking:null,bookings:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminBookings==='function')loadAdminBookings();else if(typeof loadFarmerBookings==='function')loadFarmerBookings();},myBookings:typeof loadFarmerBookings==='function'?loadFarmerBookings:null,queue:typeof loadQueue==='function'?loadQueue:null,crops:()=>{if(typeof renderFarmerCrops==='function')renderFarmerCrops();if(typeof initGrainQuality==='function')initGrainQuality();},staff:typeof loadOperators==='function'?loadOperators:null,operators:typeof loadOperators==='function'?loadOperators:null,transporters:typeof loadTransporters==='function'?loadTransporters:null,farmers:typeof loadFarmers==='function'?loadFarmers:null,procurement:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminProcurement==='function')loadAdminProcurement();else if(typeof loadOperatorProcurement==='function')loadOperatorProcurement();},payments:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminPayments==='function')loadAdminPayments();else if(typeof loadFarmerPayments==='function')loadFarmerPayments();},grievances:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminGrievances==='function')loadAdminGrievances();else if(typeof loadGrievances==='function')loadGrievances();},reports:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminReports==='function')loadAdminReports();else if(r==='LOGISTICS'&&typeof loadTransportReports==='function')loadTransportReports();else if(typeof loadOperatorReports==='function')loadOperatorReports();},audit:typeof loadAdminAuditLogs==='function'?loadAdminAuditLogs:null,operatorQueue:typeof loadOperatorQueue==='function'?loadOperatorQueue:null,quality:typeof loadOperatorQuality==='function'?loadOperatorQuality:null,weighment:typeof loadOperatorWeighment==='function'?loadOperatorWeighment:null,centreStatus:typeof loadOperatorCentreStatus==='function'?loadOperatorCentreStatus:null,trips:typeof loadTransportActive==='function'?loadTransportActive:null,trolley:()=>{const r=currentUser()?.role;if(r==='LOGISTICS'&&typeof loadTransportBookings==='function')loadTransportBookings();else if(typeof loadFarmerTrolley==='function')loadFarmerTrolley();},transportBookings:typeof loadTransportBookings==='function'?loadTransportBookings:null,transportActive:typeof loadTransportActive==='function'?loadTransportActive:null,transportCompleted:typeof loadTransportCompleted==='function'?loadTransportCompleted:null,transportEarnings:typeof loadTransportEarnings==='function'?loadTransportEarnings:null,transportProfile:typeof loadTransportProfile==='function'?loadTransportProfile:null};if(typeof loaders[name]==='function')loaders[name]()}catch(err){console.error('Error switching section to '+name+':',err)}};
+function showSection(name){try{document.querySelectorAll('.dash-section').forEach(s=>s.classList.add('hidden'));const target=document.getElementById('section-'+name);if(target)target.classList.remove('hidden');document.querySelectorAll('.side-link[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===name));const dashMain=document.querySelector('.dash-main');if(dashMain)dashMain.scrollTop=0;window.scrollTo({top:0,behavior:'smooth'});const loaders={overview:typeof loadOverview==='function'?loadOverview:null,analytics:typeof loadFarmerAnalytics==='function'?loadFarmerAnalytics:null,profile:()=>{const r=currentUser()?.role;if(r==='OPERATOR')loadOperatorProfile();else if(r==='LOGISTICS')loadTransportProfile();else loadProfile();},centres:typeof loadCentres==='function'?loadCentres:null,adminCentres:typeof loadAdminCentres==='function'?loadAdminCentres:null,booking:typeof loadBooking==='function'?loadBooking:null,bookings:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminBookings==='function')loadAdminBookings();else if(typeof loadFarmerBookings==='function')loadFarmerBookings();},myBookings:typeof loadFarmerBookings==='function'?loadFarmerBookings:null,queue:typeof loadQueue==='function'?loadQueue:null,crops:()=>{if(typeof renderFarmerCrops==='function')renderFarmerCrops();if(typeof initGrainQuality==='function')initGrainQuality();},staff:typeof loadOperators==='function'?loadOperators:null,operators:typeof loadOperators==='function'?loadOperators:null,transporters:typeof loadTransporters==='function'?loadTransporters:null,farmers:typeof loadFarmers==='function'?loadFarmers:null,procurement:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminProcurement==='function')loadAdminProcurement();else if(typeof loadOperatorProcurement==='function')loadOperatorProcurement();},payments:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminPayments==='function')loadAdminPayments();else if(r==='OPERATOR'&&typeof loadOperatorPayments==='function')loadOperatorPayments();else if(typeof loadFarmerPayments==='function')loadFarmerPayments();},operatorPayments:typeof loadOperatorPayments==='function'?loadOperatorPayments:null,grievances:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminGrievances==='function')loadAdminGrievances();else if(typeof loadGrievances==='function')loadGrievances();},reports:()=>{const r=currentUser()?.role;if(r==='ADMIN'&&typeof loadAdminReports==='function')loadAdminReports();else if(r==='LOGISTICS'&&typeof loadTransportReports==='function')loadTransportReports();else if(typeof loadOperatorReports==='function')loadOperatorReports();},audit:typeof loadAdminAuditLogs==='function'?loadAdminAuditLogs:null,operatorQueue:typeof loadOperatorQueue==='function'?loadOperatorQueue:null,quality:typeof loadOperatorQuality==='function'?loadOperatorQuality:null,weighment:typeof loadOperatorWeighment==='function'?loadOperatorWeighment:null,centreStatus:typeof loadOperatorCentreStatus==='function'?loadOperatorCentreStatus:null,trips:typeof loadTransportActive==='function'?loadTransportActive:null,trolley:()=>{const r=currentUser()?.role;if(r==='LOGISTICS'&&typeof loadTransportBookings==='function')loadTransportBookings();else if(typeof loadFarmerTrolley==='function')loadFarmerTrolley();},transportBookings:typeof loadTransportBookings==='function'?loadTransportBookings:null,transportActive:typeof loadTransportActive==='function'?loadTransportActive:null,transportCompleted:typeof loadTransportCompleted==='function'?loadTransportCompleted:null,transportEarnings:typeof loadTransportEarnings==='function'?loadTransportEarnings:null,transportProfile:typeof loadTransportProfile==='function'?loadTransportProfile:null};if(typeof loaders[name]==='function')loaders[name]()}catch(err){console.error('Error switching section to '+name+':',err)}};
 window.pendingBookCentreId = null;
 window.pendingQueueToken = null;
 
@@ -67,6 +67,45 @@ function selectCentreForBooking(centreId) {
 function showQueueForToken(token) {
   if (token) window.pendingQueueToken = String(token);
   showSection('queue');
+}
+
+function parseSlotTimeToMinutes(timeStr) {
+  if (!timeStr) return 0;
+  const match = String(timeStr).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+  if (!match) return 0;
+  let hrs = parseInt(match[1], 10);
+  const mins = parseInt(match[2], 10);
+  const ampm = match[3]?.toUpperCase();
+  if (ampm === 'PM' && hrs < 12) hrs += 12;
+  if (ampm === 'AM' && hrs === 12) hrs = 0;
+  return hrs * 60 + mins;
+}
+
+function getBookingSlotStartDateTime(b) {
+  if (!b?.slotId?.date) return new Date(0);
+  const d = new Date(b.slotId.date);
+  d.setHours(0, 0, 0, 0);
+  const startMins = parseSlotTimeToMinutes(b.slotId.startTime);
+  d.setMinutes(startMins);
+  return d;
+}
+
+function getBookingSlotEndDateTime(b) {
+  if (!b?.slotId?.date) return new Date(0);
+  const d = new Date(b.slotId.date);
+  d.setHours(0, 0, 0, 0);
+  const endMins = parseSlotTimeToMinutes(b.slotId.endTime) || (23 * 60 + 59);
+  d.setMinutes(endMins);
+  return d;
+}
+
+function isSlotUpcoming(b, now = new Date()) {
+  const status = String(b?.status || '').toUpperCase();
+  if (['PROCURED', 'COMPLETED', 'CANCELLED', 'REJECTED', 'FULFILLED'].includes(status)) {
+    return false;
+  }
+  const slotEnd = getBookingSlotEndDateTime(b);
+  return slotEnd.getTime() > now.getTime();
 }
 
 async function loadOverview(){
@@ -85,25 +124,87 @@ async function loadOverview(){
     if(role==='FARMER'){
       const queues=r.data.queues||(r.data.queue?[r.data.queue]:[]);
       const bookings=r.data.bookings||(r.data.booking?[r.data.booking]:[]);
-      const activeBookings=bookings.filter(b=>['BOOKED','CHECKED_IN','WAITING','CALLED'].includes(String(b.status).toUpperCase()));
+      const crops=r.data.crops||[];
       const pays=r.data.payments||[];
 
-      box.innerHTML=`<div class="kpis">
-        <div class="kpi"><small>Active Bookings</small><strong>${activeBookings.length}</strong></div>
-        <div class="kpi"><small>Total Registered</small><strong>${bookings.length}</strong></div>
-        <div class="kpi"><small>Current Token</small><strong>${escD(queues[0]?.token||'—')}</strong></div>
-        <div class="kpi"><small>Payment Status</small><strong>${escD(pays[0]?.status||'Pending')}</strong></div>
+      const now = new Date();
+      const upcomingBookings = bookings.filter(b => isSlotUpcoming(b, now)).sort((a,b) => getBookingSlotStartDateTime(a).getTime() - getBookingSlotStartDateTime(b).getTime());
+      const completedBookings = bookings.filter(b => ['PROCURED', 'COMPLETED', 'FULFILLED'].includes(String(b.status).toUpperCase()));
+
+      const totalCropQty = crops.reduce((sum, c) => sum + Number(c.expectedQuantity || c.quantity || 0), 0);
+      const totalPaidAmount = pays.filter(p => String(p.status).toUpperCase() === 'PAID').reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+
+      const nearestUpcoming = upcomingBookings[0];
+      const upcomingSlotText = nearestUpcoming?.slotId?.date 
+        ? `${new Date(nearestUpcoming.slotId.date).toLocaleDateString('en-IN')} (${nearestUpcoming.slotId.startTime || 'Slot'})`
+        : 'No upcoming slot';
+
+      box.innerHTML=`
+      <div class="farmer-welcome-banner card" style="background:linear-gradient(135deg,#1a382c 0%,#2a5945 100%);color:#fff;padding:24px;border-radius:18px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+        <div>
+          <span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;color:#d4af37;font-weight:700">FARMER PORTAL</span>
+          <h2 style="margin:4px 0;font-size:1.6rem;color:#fff;font-family:var(--serif)">Welcome, <span data-user-name>${escD(currentUser()?.name || 'Farmer')}</span></h2>
+          <p style="margin:0;color:#c9ddd4;font-size:0.9rem">Manage your crop registrations, slot bookings, transport and payment settlements easily.</p>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" style="background:#d4af37;color:#0c2017;font-weight:700" onclick="if(typeof openKetanWidget==='function')openKetanWidget();else document.getElementById('ketanWidgetToggle')?.click()">👨‍🌾 Ask KETAN Assistant</button>
+        </div>
+      </div>
+
+      <div class="kpis" style="margin-bottom:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+        <div class="kpi"><small>Total Crops Registered</small><strong>${crops.length} (${totalCropQty.toFixed(1)} Tons)</strong></div>
+        <div class="kpi"><small>Total Bookings</small><strong>${bookings.length} Slots</strong></div>
+        <div class="kpi"><small>Upcoming Slot</small><strong style="font-size:0.95rem;color:var(--green-900)">${upcomingSlotText}</strong></div>
+        <div class="kpi"><small>Completed Procurements</small><strong>${completedBookings.length}</strong></div>
+        <div class="kpi"><small>Total Payments Received</small><strong style="color:var(--green-900)">₹${totalPaidAmount.toLocaleString('en-IN')}</strong></div>
+        <div class="kpi"><small>Latest Payment Status</small><strong>${escD(pays[0]?.status || 'No Payments')}</strong></div>
+      </div>
+
+      <div style="margin-bottom:24px">
+        <h3 style="margin:0 0 12px 0;color:var(--green-950);font-size:1.2rem">Key Farmer Actions</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+          <div class="card" style="padding:18px;cursor:pointer;transition:transform 0.2s" onclick="showSection('crops')">
+            <div style="font-size:1.8rem;margin-bottom:6px">🌱</div>
+            <strong style="font-size:1.05rem;color:var(--green-950);display:block">1. My Crops</strong>
+            <span class="small" style="color:var(--ink-soft)">View/add/manage registered crops</span>
+          </div>
+          <div class="card" style="padding:18px;cursor:pointer;transition:transform 0.2s" onclick="showSection('booking')">
+            <div style="font-size:1.8rem;margin-bottom:6px">📅</div>
+            <strong style="font-size:1.05rem;color:var(--green-950);display:block">2. Book Procurement Slot</strong>
+            <span class="small" style="color:var(--ink-soft)">Book a mandi procurement slot</span>
+          </div>
+          <div class="card" style="padding:18px;cursor:pointer;transition:transform 0.2s" onclick="showSection('myBookings')">
+            <div style="font-size:1.8rem;margin-bottom:6px">📜</div>
+            <strong style="font-size:1.05rem;color:var(--green-950);display:block">3. My Bookings</strong>
+            <span class="small" style="color:var(--ink-soft)">View upcoming & past bookings</span>
+          </div>
+          <div class="card" style="padding:18px;cursor:pointer;transition:transform 0.2s" onclick="showSection('trolley')">
+            <div style="font-size:1.8rem;margin-bottom:6px">🚜</div>
+            <strong style="font-size:1.05rem;color:var(--green-950);display:block">4. Transport / Trolley</strong>
+            <span class="small" style="color:var(--ink-soft)">Book or manage transport</span>
+          </div>
+          <div class="card" style="padding:18px;cursor:pointer;transition:transform 0.2s" onclick="showSection('payments')">
+            <div style="font-size:1.8rem;margin-bottom:6px">💳</div>
+            <strong style="font-size:1.05rem;color:var(--green-950);display:block">5. Payments</strong>
+            <span class="small" style="color:var(--ink-soft)">View payment status/history</span>
+          </div>
+          <div class="card" style="padding:18px;cursor:pointer;transition:transform 0.2s" onclick="showSection('centres')">
+            <div style="font-size:1.8rem;margin-bottom:6px">🏢</div>
+            <strong style="font-size:1.05rem;color:var(--green-950);display:block">6. Procurement Centres</strong>
+            <span class="small" style="color:var(--ink-soft)">Find nearby procurement centres</span>
+          </div>
+        </div>
       </div>
       
       <div class="dash-grid">
         <div class="panel" style="grid-column: span 2">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <h3 style="margin:0;color:var(--green-950)">Your Procurement Journey & Active Tokens</h3>
-            <span style="font-size:0.8rem;background:rgba(42,89,69,0.1);color:var(--green-900);padding:4px 10px;border-radius:12px;font-weight:600">${activeBookings.length} Active Slot(s)</span>
+            <h3 style="margin:0;color:var(--green-950)">Your Upcoming Procurement Journey & Active Tokens</h3>
+            <span style="font-size:0.8rem;background:rgba(42,89,69,0.1);color:var(--green-900);padding:4px 10px;border-radius:12px;font-weight:600">${upcomingBookings.length} Upcoming Slot(s)</span>
           </div>
 
-          ${activeBookings.length ? `<div style="display:flex;flex-direction:column;gap:12px">
-            ${activeBookings.map((b, idx) => {
+          ${upcomingBookings.length ? `<div style="display:flex;flex-direction:column;gap:12px">
+            ${upcomingBookings.map((b, idx) => {
               const matchedQ = queues.find(q => String(q.slotId?._id||q.slotId) === String(b.slotId?._id||b.slotId) || String(q.centreId?._id||q.centreId) === String(b.centreId?._id||b.centreId)) || queues[idx];
               const tokenStr = matchedQ?.token || b.gatePassId || '—';
               const isFirst = idx === 0;
@@ -119,7 +220,7 @@ async function loadOverview(){
                 
                 <div class="metric-row" style="margin-top:10px;padding:10px 14px;background:var(--paper);border-radius:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
                   <div class="metric"><small style="font-size:0.7rem;text-transform:uppercase">Token</small><strong style="color:var(--green-900);font-size:0.95rem">🎟️ ${escD(tokenStr)}</strong></div>
-                  <div class="metric"><small style="font-size:0.7rem;text-transform:uppercase">Crop & Quantity</small><strong style="font-size:0.95rem">🌾 ${escD(b.cropId?.name||'Crop')} (${b.quantity} qtl)</strong></div>
+                  <div class="metric"><small style="font-size:0.7rem;text-transform:uppercase">Crop & Quantity</small><strong style="font-size:0.95rem">🌾 ${escD(b.cropId?.name||'Crop')} (${b.quantity} Tons)</strong></div>
                   <div class="metric"><small style="font-size:0.7rem;text-transform:uppercase">Slot Time</small><strong style="font-size:0.95rem">⏱️ ${b.slotId?.startTime||'—'}–${b.slotId?.endTime||'—'}</strong></div>
                   <div class="metric"><small style="font-size:0.7rem;text-transform:uppercase">Date</small><strong style="font-size:0.95rem">🗓️ ${b.slotId?.date ? new Date(b.slotId.date).toLocaleDateString('en-IN') : '—'}</strong></div>
                 </div>
@@ -130,11 +231,11 @@ async function loadOverview(){
                 </div>
               </div>`;
             }).join('')}
-          </div>` : `<div class="empty" style="padding:24px;text-align:center">No active procurement bookings yet.<br><button class="btn btn-primary btn-small" style="margin-top:12px" onclick="showSection('booking')">+ Book First Slot</button></div>`}
+          </div>` : `<div class="empty" style="padding:24px;text-align:center">No upcoming procurement slots.<br><button class="btn btn-primary btn-small" style="margin-top:12px" onclick="showSection('booking')">+ Book First Slot</button></div>`}
         </div>
 
         <div class="panel">
-          <h3>Quick actions</h3>
+          <h3>Quick Help & Support</h3>
           <div class="action-grid">
             <button class="action" onclick="showSection('booking')"><strong>Book Slot</strong><span>Choose centre and time</span></button>
             <button class="action" onclick="showSection('queue')"><strong>Live Queue</strong><span>See your current turn</span></button>
@@ -306,7 +407,7 @@ async function loadFarmerAnalytics(){
    const paymentTotal=pays.reduce((sum,x)=>sum+Number(x.amount||0),0);
    const bookingStatus=bookings[0]?.status||'No booking';
    box.innerHTML=`<div class="farmer-analytics-grid">
-     <div class="farmer-analytics-card card"><small>Registered crops</small><strong>${crops.length}</strong><span>${cropQty?cropQty.toLocaleString('en-IN')+' qtl recorded':'Add crops from My Crops'}</span></div>
+     <div class="farmer-analytics-card card"><small>Registered crops</small><strong>${crops.length}</strong><span>${cropQty?cropQty.toLocaleString('en-IN')+' Tons recorded':'Add crops from My Crops'}</span></div>
      <div class="farmer-analytics-card card"><small>Active Bookings</small><strong>${bookings.length}</strong><span>${escD(bookings[0]?.centreId?.name||'No active centre')}</span></div>
      <div class="farmer-analytics-card card"><small>Payment records</small><strong>${pays.length}</strong><span>${paid} marked paid${paymentTotal?' · ₹'+paymentTotal.toLocaleString('en-IN')+' total':''}</span></div>
      <div class="farmer-analytics-card card"><small>Current queue</small><strong>${d.queue?.position?Math.max(0,d.queue.position-1):0}</strong><span>${d.queue?.estimatedWait||0} min estimated wait</span></div>
@@ -370,7 +471,7 @@ async function loadBooking(presetCentreId){
     box.innerHTML=`<form id="bookForm" class="card form-stack">
       <div><label>Procurement centre</label><select id="bookCentre" required>${centres.data.map(c=>`<option value="${c._id||c.id}">${escD(c.name)} — ${escD(c.location?.district)}</option>`).join('')}</select></div>
       <div><label>Crop</label><select id="bookCrop" required>${crops.data.map(c=>`<option value="${c._id||c.id}">${escD(c.name)}</option>`).join('')}</select></div>
-      <div><label>Quantity (quintals)</label><input id="bookQty" type="number" min="0.01" step="0.01" placeholder="e.g. 50" required></div>
+      <div><label>Quantity (Tons)</label><input id="bookQty" type="number" min="0.01" step="0.01" placeholder="e.g. 5" required></div>
       <div><label>Date</label><input id="bookDate" type="date" value="${todayStr}" min="${todayStr}" required></div>
       <div><label>Available Slots for Selected Date</label><select id="bookSlot" required><option value="">Loading slots…</option></select></div>
       <div><button class="btn btn-outline btn-small" type="button" id="recommendSlotBtn">✨ Find Best Slot For Me</button><div id="slotRecommendation" class="small" style="margin-top:10px"></div></div>
@@ -534,355 +635,46 @@ async function renderFarmerCrops(){
     const crops=r.data||[];
     window.farmerCropsData = crops;
     list.innerHTML=crops.length?crops.map(c=>{
-      const qc = c.latestQualityCheck && c.latestQualityCheck.checkedAt ? c.latestQualityCheck : null;
       const cropNameStr = escD(c.cropName||c.cropId?.name||'Crop');
-      const gradePillLabel = qc ? escD(qc.grade || qc.result || 'Grade A') : 'Ungraded';
-      const isPassGrade = qc && (qc.grade?.includes('Grade A') || qc.grade?.includes('FAQ') || qc.result === 'PASS');
+      const qtyStr = c.expectedQuantity ? `${c.expectedQuantity} Tons` : (c.quantity ? `${c.quantity} Tons` : '0 Tons');
+      const gradeStr = escD(c.qualityGrade || c.grade || 'Grade A');
 
-      return `<div class="crop-card card">
-        <div class="crop-card-header">
+      return `<div class="crop-card card" style="padding:20px;border-radius:16px;margin-bottom:14px;border:1px solid rgba(21,71,52,0.12)">
+        <div class="crop-card-header" style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
           <div>
             <h4 style="margin:0;font-size:1.15rem;font-weight:700;color:var(--green-950)">🌾 ${cropNameStr}</h4>
             <span style="font-size:0.75rem;color:var(--ink-soft);margin-top:2px;display:block">Season: <strong>${escD(c.season||'Kharif')}</strong></span>
           </div>
-          <span class="status-pill ${isPassGrade ? 'status-active' : 'status-warn'}" style="font-weight:700">${gradePillLabel}</span>
+          <span class="status-pill status-active" style="font-weight:700">${gradeStr}</span>
         </div>
-        <div class="crop-card-body">
-          <div>Expected Quantity: <strong style="color:var(--green-900);font-size:1rem">${c.expectedQuantity} qtl</strong></div>
+        <div class="crop-card-body" style="font-size:0.9rem;display:flex;flex-direction:column;gap:6px">
+          <div>Expected Quantity: <strong style="color:var(--green-900);font-size:1rem">${qtyStr}</strong></div>
           <div>Cultivated Land: <strong>${c.cultivatedArea||0} acres</strong></div>
           <div>Status: <span style="font-weight:600;color:var(--green-800)">${escD(c.status||'REGISTERED')}</span></div>
-          
-          ${qc ? `
-            <div style="margin-top:12px; padding:10px 14px; background:rgba(42,89,69,0.06); border-radius:10px; border:1px solid rgba(42,89,69,0.2)">
-              <div style="display:flex; justify-content:space-between; align-items:center">
-                <span style="font-weight:700; font-size:0.85rem; color:var(--green-950)">🤖 Latest AI Quality Check</span>
-                <span class="status-pill ${isPassGrade ? 'status-active' : 'status-warn'}" style="font-weight:700">${escD(qc.grade || qc.result || 'Grade A')}</span>
-              </div>
-              <div style="font-size:0.8rem; color:var(--ink-soft); margin:6px 0 10px 0">
-                Confidence: <strong>${qc.confidence || 90}%</strong> · Checked: <strong>${new Date(qc.checkedAt).toLocaleDateString('en-IN')}</strong>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap">
-                <button type="button" class="btn btn-primary btn-small" onclick="selectCropForQualityCheck('${c._id}')">👁️ View Result</button>
-                <button type="button" class="btn btn-outline btn-small" onclick="selectCropForQualityCheck('${c._id}')">🔄 Re-Check Quality</button>
-              </div>
-            </div>
-          ` : `
-            <div style="margin-top:12px; padding:10px 14px; background:var(--paper); border-radius:10px; border:1px dashed rgba(0,0,0,0.15)">
-              <div style="font-size:0.82rem; color:var(--ink-soft); margin-bottom:8px">No AI Quality Check performed yet.</div>
-              <button type="button" class="btn btn-primary btn-small" onclick="selectCropForQualityCheck('${c._id}')">🤖 AI Grain Quality Check</button>
-            </div>
-          `}
         </div>
-        <div class="crop-card-footer" style="margin-top:10px">
+        <div class="crop-card-footer" style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:flex-end">
           <button class="btn btn-outline btn-small" style="color:#c6503e;border-color:rgba(198,80,62,0.3)" onclick="deleteFarmerCrop('${c._id}')">🗑️ Delete Crop</button>
         </div>
       </div>`;
     }).join(''):'<div class="empty">No crops registered in your profile yet. Use the form above to record your crop details.</div>';
-
-    renderFarmerQualitySection();
   }catch(e){
     list.innerHTML=`<div class="notice">${escD(e.message)}</div>`;
   }
 }
 
-window.farmerQualitySectionState = {
-  cropId: null,
-  cropName: null,
-  photos: []
-};
-
-function selectCropForQualityCheck(cropId) {
-  const crops = window.farmerCropsData || [];
-  const found = crops.find(c => String(c._id) === String(cropId));
-  if (found) {
-    window.farmerQualitySectionState = {
-      cropId: found._id,
-      cropName: found.cropName || found.cropId?.name || 'Crop',
-      photos: []
-    };
-    renderFarmerQualitySection();
-    document.getElementById('farmerQualityCheckSection')?.scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-function onFarmerQualityCropChange(cropId) {
-  selectCropForQualityCheck(cropId);
-}
-
+window.farmerQualitySectionState = { cropId: null, cropName: null, photos: [] };
+function selectCropForQualityCheck(cropId) {}
+function onFarmerQualityCropChange(cropId) {}
 function renderFarmerQualitySection() {
-  const container = document.getElementById('farmerQualitySectionContent');
-  if (!container) return;
-
-  const crops = window.farmerCropsData || [];
-  if (!crops.length) {
-    container.innerHTML = `<div class="notice" style="background:var(--paper); color:var(--ink-soft)">No registered crops found in your account. Please record your crop details above to run an AI Quality Check.</div>`;
-    return;
-  }
-
-  let state = window.farmerQualitySectionState;
-  let activeCrop = crops.find(c => String(c._id) === String(state.cropId)) || crops[0];
-  state.cropId = activeCrop._id;
-  state.cropName = activeCrop.cropName || activeCrop.cropId?.name || 'Crop';
-
-  const photoCount = state.photos.length;
-  const isReady = photoCount >= 5;
-  const suggestedAngles = ['Top View', 'Side View', 'Close-Up', 'Wide Angle', 'Grain Spread'];
-
-  const hasRealQc = activeCrop.latestQualityCheck && activeCrop.latestQualityCheck.checkedAt && (activeCrop.latestQualityCheck.imageCount >= 5 || activeCrop.latestQualityCheck.confidence);
-
-  container.innerHTML = `
-    <!-- Crop selection & Upload instructions bar -->
-    <div style="background:var(--paper,#f6f8f6); padding:14px; border-radius:12px; border:1px solid rgba(42,89,69,0.15); margin-bottom:16px">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px">
-        <div style="flex:1; min-width:240px">
-          <label style="font-size:0.75rem; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block; margin-bottom:4px">Select Registered Crop to Inspect</label>
-          <select id="farmerQualityCropSelect" onchange="onFarmerQualityCropChange(this.value)" style="font-size:1.05rem; font-weight:700; color:var(--green-950); padding:6px 12px; border-radius:8px; border:1px solid #b5c7bc; width:100%">
-            ${crops.map(c => {
-              const name = escD(c.cropName || c.cropId?.name || 'Crop');
-              const isSel = String(c._id) === String(activeCrop._id);
-              const hasQcPill = c.latestQualityCheck && c.latestQualityCheck.checkedAt ? ' (Passed AI Check)' : ' (Not Checked)';
-              return `<option value="${c._id}" ${isSel ? 'selected' : ''}>🌾 ${name} (${c.expectedQuantity} qtl · ${c.season || 'Kharif'})${hasQcPill}</option>`;
-            }).join('')}
-          </select>
-        </div>
-        <div style="text-align:right">
-          <span class="status-pill ${isReady ? 'status-active' : 'status-warn'}" style="font-size:0.85rem">
-            Images uploaded: <strong>${photoCount} / 5</strong>
-          </span>
-        </div>
-      </div>
-      <p style="font-size:0.85rem; color:var(--ink-soft); margin:12px 0 0 0; line-height:1.4">
-        📌 <strong>Instructions:</strong> Upload at least <strong>5 clear images</strong> of <strong>${escD(state.cropName)}</strong> from different angles (top view, side view, close-up, spread view) for an accurate quality assessment.
-      </p>
-    </div>
-
-    <!-- Upload Header & Actions -->
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
-      <h4 style="margin:0; color:var(--green-950); font-size:1.05rem">📸 Grain Sample Photos (${state.cropName})</h4>
-      <div>
-        <input type="file" id="farmerQualityFileInput" accept="image/*" multiple style="display:none" onchange="handleFarmerQualityPhotoAdd(this)">
-        <button type="button" class="btn btn-outline btn-small" onclick="document.getElementById('farmerQualityFileInput').click()">
-          ➕ Add Photos (Multi-select)
-        </button>
-      </div>
-    </div>
-
-    <!-- 5 Photo Slots Grid -->
-    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(115px, 1fr)); gap:12px; margin-bottom:18px">
-      ${[0, 1, 2, 3, 4].map(idx => {
-        const item = state.photos[idx];
-        const angleLabel = suggestedAngles[idx] || `Angle ${idx + 1}`;
-        if (item) {
-          return `
-            <div style="border: 1px solid var(--green-700,#2a5945); border-radius: 10px; padding: 8px; text-align: center; background: #fff; box-shadow:0 2px 6px rgba(0,0,0,0.05)">
-              <div style="font-size: 0.75rem; font-weight:700; color:var(--green-900); margin-bottom:4px">
-                Image ${idx + 1}
-              </div>
-              <img src="${item.dataUrl}" style="width:100%; height:75px; object-fit:cover; border-radius:6px; border:1px solid #eee">
-              <div style="font-size:0.7rem; color:var(--ink-soft); margin:4px 0">${angleLabel}</div>
-              <div style="display:flex; gap:4px; margin-top:6px">
-                <input type="file" id="replaceInput-${idx}" accept="image/*" style="display:none" onchange="handleFarmerQualityPhotoReplace(${idx}, this)">
-                <button type="button" class="btn btn-outline btn-small" style="font-size:0.65rem; padding:2px 4px; flex:1" onclick="document.getElementById('replaceInput-${idx}').click()">Replace</button>
-                <button type="button" class="btn btn-outline btn-small" style="font-size:0.65rem; padding:2px 4px; color:#b00; border-color:#b00" onclick="removeFarmerQualityPhoto(${idx})">Delete</button>
-              </div>
-            </div>
-          `;
-        } else {
-          return `
-            <div style="border: 2px dashed #b5c7bc; border-radius: 10px; padding: 12px 8px; text-align: center; background: #fafafa; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:130px">
-              <div style="font-size: 0.75rem; font-weight:700; color:var(--ink-soft)">Image ${idx + 1}</div>
-              <div style="font-size: 0.7rem; color:var(--ink-soft); margin:4px 0">${angleLabel}</div>
-              <input type="file" id="slotInput-${idx}" accept="image/*" style="display:none" onchange="handleFarmerQualityPhotoSlot(${idx}, this)">
-              <button type="button" class="btn btn-outline btn-small" style="font-size:0.7rem; padding:4px 8px; margin-top:6px" onclick="document.getElementById('slotInput-${idx}').click()">📷 Upload</button>
-            </div>
-          `;
-        }
-      }).join('')}
-    </div>
-
-    ${photoCount > 5 ? `
-      <div style="margin-bottom:16px">
-        <h5 style="margin:0 0 8px 0; color:var(--ink-soft)">Additional Photos (${photoCount - 5})</h5>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(110px, 1fr)); gap:10px">
-          ${state.photos.slice(5).map((item, addIdx) => {
-            const realIdx = addIdx + 5;
-            return `
-              <div style="border: 1px solid #ccc; border-radius: 8px; padding: 6px; text-align: center; background: #fff">
-                <div style="font-size: 0.7rem; font-weight:700">Image ${realIdx + 1}</div>
-                <img src="${item.dataUrl}" style="width:100%; height:60px; object-fit:cover; border-radius:4px">
-                <button type="button" class="btn btn-outline btn-small" style="font-size:0.65rem; padding:2px 4px; color:#b00; margin-top:4px; width:100%" onclick="removeFarmerQualityPhoto(${realIdx})">Delete</button>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-    ` : ''}
-
-    <div id="farmerQualityStatusMsg"></div>
-
-    <button type="button" id="farmerRunQualityBtn" class="btn btn-primary" style="width:100%; padding:12px; font-size:1rem; font-weight:700; margin-top:8px" ${!isReady ? 'disabled' : ''} onclick="submitFarmerCropQualityCheck()">
-      🤖 Run AI Quality Check (${isReady ? 'Ready — 5/5 Photos Uploaded' : `Upload ${5 - photoCount} More Photo${5 - photoCount > 1 ? 's' : ''}`})
-    </button>
-
-    <!-- Result Display Container -->
-    <div id="farmerQualityResultBox" style="margin-top:18px">
-      ${hasRealQc ? getQualityResultCertificateHTML(activeCrop.cropName || activeCrop.cropId?.name || 'Crop', activeCrop.latestQualityCheck) : `
-        <div class="notice" style="background:var(--paper,#f6f8f6); color:var(--ink-soft,#666); font-size:0.88rem; border:1px dashed rgba(0,0,0,0.15); border-radius:10px; padding:14px; margin-top:14px">
-          ℹ️ <strong>No Quality Check Performed Yet for ${escD(activeCrop.cropName || activeCrop.cropId?.name || 'Crop')}:</strong><br>
-          Please upload <strong>at least 5 clear grain photos</strong> from different angles (top view, side view, close-up, wide angle, grain spread) above and click <strong>Run AI Quality Check</strong> to analyze your crop and generate an AI Quality Certificate.
-        </div>
-      `}
-    </div>
-  `;
+  const sec = document.getElementById('farmerQualityCheckSection');
+  if (sec) sec.style.display = 'none';
 }
-
-async function handleFarmerQualityPhotoAdd(input) {
-  if (!input.files || !input.files.length) return;
-  const files = Array.from(input.files);
-  for (const f of files) {
-    const dataUrl = await new Promise(resolve => {
-      const r = new FileReader();
-      r.onload = () => resolve(r.result);
-      r.readAsDataURL(f);
-    });
-    window.farmerQualitySectionState.photos.push({
-      id: Date.now() + Math.random(),
-      dataUrl,
-      name: f.name
-    });
-  }
-  input.value = '';
-  renderFarmerQualitySection();
-}
-
-function handleFarmerQualityPhotoSlot(slotIdx, input) {
-  if (!input.files || !input.files[0]) return;
-  const f = input.files[0];
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    window.farmerQualitySectionState.photos[slotIdx] = {
-      id: Date.now() + Math.random(),
-      dataUrl: e.target.result,
-      name: f.name
-    };
-    input.value = '';
-    renderFarmerQualitySection();
-  };
-  reader.readAsDataURL(f);
-}
-
-function handleFarmerQualityPhotoReplace(index, input) {
-  if (!input.files || !input.files[0]) return;
-  const f = input.files[0];
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    window.farmerQualitySectionState.photos[index] = {
-      id: Date.now() + Math.random(),
-      dataUrl: e.target.result,
-      name: f.name
-    };
-    input.value = '';
-    renderFarmerQualitySection();
-  };
-  reader.readAsDataURL(f);
-}
-
-function removeFarmerQualityPhoto(index) {
-  window.farmerQualitySectionState.photos.splice(index, 1);
-  renderFarmerQualitySection();
-}
-
-async function submitFarmerCropQualityCheck() {
-  const state = window.farmerQualitySectionState;
-  if (!state.cropId) return;
-  if (state.photos.length < 5) {
-    alert(`Minimum 5 photos required for AI analysis. Currently uploaded: ${state.photos.length}`);
-    return;
-  }
-
-  const btn = document.getElementById('farmerRunQualityBtn');
-  const statusMsg = document.getElementById('farmerQualityStatusMsg');
-  const resultBox = document.getElementById('farmerQualityResultBox');
-
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '⏳ Analyzing Grain Samples with AI Microservice…';
-  }
-  if (statusMsg) {
-    statusMsg.innerHTML = '<div class="notice" style="background:rgba(42,89,69,0.1); color:var(--green-950)">🔬 Transmitting 5 grain photos to AI microservice for color, foreign matter, moisture & broken grain analysis…</div>';
-  }
-
-  try {
-    const images = state.photos.map(p => p.dataUrl);
-    const r = await dapi(`/farmer/crops/${state.cropId}/quality-check`, {
-      method: 'POST',
-      body: JSON.stringify({ images })
-    });
-
-    const data = r.data || {};
-    const qc = data.latestQualityCheck || data.quality || data;
-
-    if (statusMsg) statusMsg.innerHTML = '';
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '✓ AI Quality Check Complete (Run Again)';
-    }
-
-    if (resultBox) {
-      resultBox.innerHTML = getQualityResultCertificateHTML(state.cropName, qc);
-    }
-
-    await renderFarmerCrops();
-  } catch (e) {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '🤖 Run AI Quality Check (Retry)';
-    }
-    if (statusMsg) {
-      statusMsg.innerHTML = `<div class="notice" style="background:#fff0f0; color:#b00; border-color:#fbb">✕ ${escD(e.message)}</div>`;
-    }
-  }
-}
-
-function getQualityResultCertificateHTML(cropName, qc) {
-  const isPass = (qc.grade || qc.result || '').includes('Grade A') || (qc.grade || qc.result || '').includes('FAQ') || qc.result === 'PASS';
-
-  return `
-    <div style="background:#fff; border:2px solid ${isPass ? 'var(--green-700,#2a5945)' : '#e67e22'}; border-radius:14px; padding:18px; margin-top:12px; box-shadow:0 4px 12px rgba(0,0,0,0.06)">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; border-bottom:1px solid #eee; padding-bottom:12px; margin-bottom:12px">
-        <div>
-          <span class="eyebrow" style="margin:0; color:var(--green-900)">AI GRAIN ANALYSIS CERTIFICATE</span>
-          <h3 style="margin:2px 0 0 0; color:var(--green-950); font-size:1.3rem">🌾 ${escD(cropName)} Quality Results</h3>
-        </div>
-        <div style="text-align:right">
-          <span class="status-pill ${isPass ? 'status-active' : 'status-warn'}" style="font-size:1rem; font-weight:800; padding:6px 14px">
-            ${escD(qc.grade || qc.result || 'Grade A')}
-          </span>
-        </div>
-      </div>
-
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:10px; background:var(--paper,#f6f8f6); padding:12px; border-radius:10px; margin-bottom:14px">
-        <div><small style="color:var(--ink-soft); font-size:0.75rem; text-transform:uppercase">AI Confidence</small><br><strong style="font-size:1.1rem; color:var(--green-900)">${qc.confidence || 90}%</strong></div>
-        <div><small style="color:var(--ink-soft); font-size:0.75rem; text-transform:uppercase">Images Analyzed</small><br><strong style="font-size:1.1rem; color:var(--green-950)">${qc.imageCount || 5} Photos</strong></div>
-        <div><small style="color:var(--ink-soft); font-size:0.75rem; text-transform:uppercase">Inspection Date</small><br><strong style="font-size:0.95rem">${qc.checkedAt ? new Date(qc.checkedAt).toLocaleDateString('en-IN') : 'Just now'}</strong></div>
-      </div>
-
-      <div style="margin-bottom:14px">
-        <h4 style="margin:0 0 6px 0; color:var(--green-950); font-size:0.95rem">🔎 Key AI Observations:</h4>
-        <ul style="margin:0; padding-left:20px; font-size:0.88rem; color:var(--ink-main,#222); line-height:1.5">
-          ${(qc.observations || ['Grain uniformity and surface color verified', 'Moisture level within MSP target parameters']).map(obs => `<li>${escD(obs)}</li>`).join('')}
-        </ul>
-      </div>
-
-      ${qc.recommendations ? `
-        <div style="padding:10px 12px; background:rgba(42,89,69,0.06); border-radius:8px; border-left:4px solid var(--green-900)">
-          <strong style="font-size:0.85rem; color:var(--green-950)">💡 Mandi Procurement Recommendation:</strong>
-          <p style="margin:4px 0 0 0; font-size:0.85rem; color:var(--ink-main)">${escD(qc.recommendations)}</p>
-        </div>
-      ` : ''}
-    </div>
-  `;
-}
+function handleFarmerQualityPhotoAdd() {}
+function handleFarmerQualityPhotoSlot() {}
+function handleFarmerQualityPhotoReplace() {}
+function removeFarmerQualityPhoto() {}
+function submitFarmerCropQualityCheck() {}
+function getQualityResultCertificateHTML() { return ''; }
 
 
 async function addFarmerCrop(){
@@ -897,7 +689,7 @@ async function addFarmerCrop(){
     return;
   }
   if(!qty||qty<=0){
-    alert('Enter expected quantity greater than 0 quintals.');
+    alert('Enter expected quantity greater than 0 Tons.');
     return;
   }
   if(area < 0){
@@ -914,14 +706,711 @@ async function addFarmerCrop(){
     alert(x.message);
   }
 }
-async function deleteFarmerCrop(id){if(!confirm('Remove this crop record from your MongoDB profile?'))return;try{await dapi('/farmer/crops/'+id,{method:'DELETE'});renderFarmerCrops()}catch(x){alert(x.message)}};
-async function loadFarmerBookings(){const box=document.getElementById('myBookingsList');if(!box)return;box.innerHTML='<div class="empty">Loading your procurement bookings…</div>';try{const r=await dapi('/farmer/bookings');const bookings=r.data||[];box.innerHTML=bookings.length?bookings.map(b=>`<div class="card" style="margin-bottom:16px;padding:20px;border:1px solid rgba(21,71,52,0.12);border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03)"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px"><div><div class="eyebrow" style="margin-bottom:2px">BOOKING REFERENCE: ${escD(b.gatePassId||b._id)}</div><h3 style="margin:0;font-size:1.2rem;color:var(--green-950)">🏢 ${escD(b.centreId?.name||'Procurement Centre')}</h3><p style="margin:4px 0 0 0;font-size:0.875rem;color:var(--ink-soft)">📍 Location: ${escD(b.centreId?.location?.district||'')}, ${escD(b.centreId?.location?.state||'')}</p></div><span class="status-pill ${['BOOKED','CHECKED_IN','WAITING'].includes(b.status)?'status-active':['PROCURED','COMPLETED'].includes(b.status)?'status-active':'status-warn'}" style="font-weight:700">${escD(b.status)}</span></div><div class="metric-row" style="margin:14px 0;padding:12px 16px;background:var(--paper);border-radius:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div class="metric"><small style="color:var(--ink-soft);font-size:0.75rem;text-transform:uppercase">Crop</small><strong style="color:var(--green-900);font-size:1rem">🌾 ${escD(b.cropId?.name||'Crop')}</strong></div><div class="metric"><small style="color:var(--ink-soft);font-size:0.75rem;text-transform:uppercase">Quantity</small><strong style="font-size:1rem">⚖️ ${b.quantity} qtl</strong></div><div class="metric"><small style="color:var(--ink-soft);font-size:0.75rem;text-transform:uppercase">Slot Time</small><strong style="font-size:1rem">⏱️ ${b.slotId?.startTime||'—'} – ${b.slotId?.endTime||'—'}</strong></div><div class="metric"><small style="color:var(--ink-soft);font-size:0.75rem;text-transform:uppercase">Date</small><strong style="font-size:1rem">🗓️ ${b.slotId?.date?new Date(b.slotId.date).toLocaleDateString('en-IN'):'—'}</strong></div></div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(0,0,0,0.05)"><span style="font-size:0.825rem;color:var(--ink-soft)">Gate Pass ID: <strong>${escD(b.gatePassId||'—')}</strong></span><button class="btn btn-outline btn-small" onclick="showQueueForToken('${b.queueId?.token || b.token || b.gatePassId || b._id}')">Track Live Queue →</button></div></div>`).join(''):'<div class="empty">You have no booking records yet. Use "Book Slot" to make your first booking.</div>'}catch(e){box.innerHTML=`<div class="notice">${escD(e.message)}</div>`}};
+async function loadFarmerBookings(){
+  const box=document.getElementById('myBookingsList');
+  if(!box)return;
+  box.innerHTML='<div class="empty">Loading your procurement bookings…</div>';
+  try{
+    const r=await dapi('/farmer/bookings');
+    const bookings=r.data||[];
+    const now = new Date();
+
+    if(!bookings.length){
+      box.innerHTML='<div class="empty">You have no booking records yet. Use "Book Slot" to make your first booking.</div>';
+      return;
+    }
+
+    const upcoming = bookings.filter(b => isSlotUpcoming(b, now)).sort((a,b) => getBookingSlotStartDateTime(a).getTime() - getBookingSlotStartDateTime(b).getTime());
+    const past = bookings.filter(b => !isSlotUpcoming(b, now)).sort((a,b) => getBookingSlotStartDateTime(b).getTime() - getBookingSlotStartDateTime(a).getTime());
+
+    const renderCard = (b, isUpcomingSlot) => {
+      const isCompleted = ['PROCURED','COMPLETED','FULFILLED'].includes(String(b.status).toUpperCase());
+      const isCancelled = ['CANCELLED','REJECTED'].includes(String(b.status).toUpperCase());
+      const statusPillClass = isCompleted ? 'status-active' : isCancelled ? 'status-warn' : isUpcomingSlot ? 'status-active' : 'status-warn';
+      const dateStr = b.slotId?.date ? new Date(b.slotId.date).toLocaleDateString('en-IN') : '—';
+      const timeStr = `${b.slotId?.startTime||'—'} – ${b.slotId?.endTime||'—'}`;
+
+      return `<div class="card" style="margin-bottom:16px;padding:20px;border:1px solid ${isUpcomingSlot ? 'rgba(42,89,69,0.25)' : 'rgba(21,71,52,0.12)'};border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03);${isUpcomingSlot ? 'background:rgba(42,89,69,0.02);' : ''}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">
+          <div>
+            <div class="eyebrow" style="margin-bottom:2px">BOOKING REFERENCE: ${escD(b.gatePassId||b._id)}</div>
+            <h3 style="margin:0;font-size:1.2rem;color:var(--green-950)">🏢 ${escD(b.centreId?.name||'Procurement Centre')}</h3>
+            <p style="margin:4px 0 0 0;font-size:0.875rem;color:var(--ink-soft)">📍 Location: ${escD(b.centreId?.location?.district||'')}, ${escD(b.centreId?.location?.state||'')}</p>
+          </div>
+          <span class="status-pill ${statusPillClass}" style="font-weight:700">${escD(b.status)}</span>
+        </div>
+        <div class="metric-row" style="margin:14px 0;padding:12px 16px;background:var(--paper);border-radius:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+          <div class="metric">
+            <small style="color:var(--ink-soft);font-size:0.75rem;text-transform:uppercase">Crop</small>
+            <strong style="color:var(--green-900);font-size:1rem">🌾 ${escD(b.cropId?.name||b.crop||'Crop')}</strong>
+          </div>
+          <div class="metric">
+            <small style="color:var(--ink-soft);font-size:0.75rem;text-transform:uppercase">Quantity</small>
+            <strong style="font-size:1rem">⚖️ ${b.quantity} Tons</strong>
+          </div>
+          <div class="metric">
+            <small style="color:var(--ink-soft);font-size:0.75rem;text-transform:uppercase">Slot Time</small>
+            <strong style="font-size:1rem">⏱️ ${timeStr}</strong>
+          </div>
+          <div class="metric">
+            <small style="color:var(--ink-soft);font-size:0.75rem;text-transform:uppercase">Date</small>
+            <strong style="font-size:1rem">🗓️ ${dateStr}</strong>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(0,0,0,0.05)">
+          <span style="font-size:0.825rem;color:var(--ink-soft)">Gate Pass ID: <strong>${escD(b.gatePassId||'—')}</strong></span>
+          <button class="btn btn-outline btn-small" onclick="showQueueForToken('${b.queueId?.token || b.token || b.gatePassId || b._id}')">Track Live Queue →</button>
+        </div>
+      </div>`;
+    };
+
+    let html = '';
+    if(upcoming.length){
+      html += `<div style="margin-bottom:20px">
+        <h3 style="margin:0 0 12px 0;color:var(--green-950);font-size:1.15rem;display:flex;align-items:center;gap:8px">📅 Upcoming Procurement Slots (${upcoming.length})</h3>
+        ${upcoming.map(b => renderCard(b, true)).join('')}
+      </div>`;
+    }
+    if(past.length){
+      html += `<div style="margin-top:24px">
+        <h3 style="margin:0 0 12px 0;color:var(--ink-soft);font-size:1.15rem;display:flex;align-items:center;gap:8px">📜 Past & Completed Bookings History (${past.length})</h3>
+        ${past.map(b => renderCard(b, false)).join('')}
+      </div>`;
+    }
+
+    box.innerHTML = html;
+  }catch(e){
+    box.innerHTML=`<div class="notice">${escD(e.message)}</div>`;
+  }
+}
 function initGrainQuality(){const input=document.getElementById('grainPhotoInput'),preview=document.getElementById('grainPreview'),btn=document.getElementById('analyzeGrainBtn'),out=document.getElementById('grainResultBox');if(!input||!btn||input.dataset.bound==='1')return;input.dataset.bound='1';let img=null;input.addEventListener('change',()=>{const file=input.files[0];if(!file)return;const url=URL.createObjectURL(file);preview.src=url;preview.style.display='block';img=new Image();img.onload=()=>btn.disabled=false;img.src=url});btn.addEventListener('click',()=>{if(!img)return;const r=analyzeFarmerGrain(img,2425);out.innerHTML=`<div class="grain-result"><div class="grain-grade">${escD(r.grade)}</div><div class="grain-metrics"><div><span>Discoloration</span><strong>${r.discolorationPct}%</strong></div><div><span>Foreign matter proxy</span><strong>${r.foreignMatterPct}%</strong></div><div><span>Broken grain proxy</span><strong>${r.brokenGrainPct}%</strong></div></div><div class="grain-price">Reference MSP ₹${r.mspRate.toLocaleString('en-IN')} → <strong>₹${r.adjustedRate.toLocaleString('en-IN')}/qtl</strong>${r.deductionPct?` (-${r.deductionPct}%)`:''}</div><p class="grain-note">Prototype image estimate only. Final procurement quality is decided by authorised mandi grading.</p></div>`})}
 function analyzeFarmerGrain(imgEl,mspRate){const canvas=document.createElement('canvas'),w=240,h=240;canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.drawImage(imgEl,0,0,w,h);const data=ctx.getImageData(0,0,w,h).data;let n=0,discolored=0,darkSpots=0;const gray=new Float32Array(w*h);for(let i=0,p=0;i<data.length;i+=4,p++){const r=data[i],g=data[i+1],b=data[i+2],brightness=(r+g+b)/3;gray[p]=brightness;n++;const maxc=Math.max(r,g,b),minc=Math.min(r,g,b),sat=maxc===0?0:(maxc-minc)/maxc,warm=r>g&&g>=b&&r-b>15;if(!warm&&sat>.12)discolored++;if(brightness<60)darkSpots++}let edges=0;for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){const i=y*w+x,gx=gray[i+1]-gray[i-1],gy=gray[i+w]-gray[i-w];if(Math.sqrt(gx*gx+gy*gy)>40)edges++}const discolorationPct=+(100*discolored/n).toFixed(1),foreignMatterPct=+(100*darkSpots/n).toFixed(1),brokenGrainPct=+Math.min(100,100*edges/(w*h)*3.4).toFixed(1),score=Math.max(0,100-(discolorationPct*1.1+foreignMatterPct*1.4+brokenGrainPct*.9));let grade,deductionPct;if(score>=85){grade='FAQ (Fair Average Quality)';deductionPct=0}else if(score>=70){grade='Grade A';deductionPct=3}else if(score>=50){grade='Grade B';deductionPct=8}else{grade='Below Grade — needs physical review';deductionPct=18}return{grade,deductionPct,adjustedRate:Math.round(mspRate*(1-deductionPct/100)),mspRate,discolorationPct,foreignMatterPct,brokenGrainPct}}
 function renderPaymentTimeline(container,currentStepIndex){if(!container)return;const steps=['Payment initiated','Quality verified','Bill generated','PFMS processing','Bank credited','Completed'];container.innerHTML=`<div class="pfms-track">${steps.map((s,i)=>`<div class="pfms-step ${i<=currentStepIndex?'done':''} ${i===currentStepIndex?'current':''}"><div class="pfms-dot"></div><div class="pfms-label">${s}</div></div>`).join('')}</div>`}
-async function loadFarmerPayments(){try{const r=await dapi('/farmer/status');renderPayments(r.data?.payments||[])}catch(e){renderPayments([])}}
-function renderPayments(pays){const box=document.getElementById('paymentsContent');if(!box)return;const seeded=[{id:'MUS-0921',date:'5 Sep 2026',crop:'Mustard',qty:'18 qtl',amount:101700,status:'PAID'},{id:'WHT-0774',date:'22 Aug 2026',crop:'Wheat',qty:'32 qtl',amount:77600,status:'PAID'},{id:'WHT-0650',date:'9 Aug 2026',crop:'Wheat',qty:'20 qtl',amount:48500,status:'PROCESSING'}];const rows=(pays&&pays.length?pays.map((p,i)=>({id:p.reference||('PAY-'+String(i+1).padStart(4,'0')),date:new Date(p.createdAt||Date.now()).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),crop:p.procurementId?.cropId?.name||'Procurement',qty:p.procurementId?.acceptedQuantity?`${p.procurementId.acceptedQuantity} qtl`:'—',amount:Number(p.amount||0),status:p.status||'PENDING'})):seeded);const paid=rows.filter(x=>String(x.status).toUpperCase()==='PAID').reduce((a,x)=>a+x.amount,0);const processing=rows.filter(x=>String(x.status).toUpperCase()!=='PAID').reduce((a,x)=>a+x.amount,0);box.innerHTML=`<div class="payment-summary"><div class="kpi"><small>Total paid</small><strong>₹${paid.toLocaleString('en-IN')}</strong></div><div class="kpi"><small>In processing</small><strong>₹${processing.toLocaleString('en-IN')}</strong></div><div class="kpi"><small>Settlements</small><strong>${rows.length}</strong></div></div><div class="card payment-card"><div class="table-wrap"><table class="pay-table"><thead><tr><th>Date</th><th>Crop</th><th>Quantity</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>${rows.map(x=>`<tr><td>${escD(x.date)}</td><td>${escD(x.crop)}</td><td>${escD(x.qty)}</td><td>₹${x.amount.toLocaleString('en-IN')}</td><td><span class="status-pill ${String(x.status).toUpperCase()==='PAID'?'status-active':'status-warn'}">${escD(x.status)}</span></td><td>${String(x.status).toUpperCase()==='PAID'?`<button class="link-btn" onclick='downloadFarmerReceipt(${JSON.stringify(x)})'>Receipt ↓</button>`:'<span style="color:var(--ink-soft);font-size:11px">Pending</span>'}</td></tr>`).join('')}</tbody></table></div></div><div class="card payment-card"><h3 style="font-size:16px;color:var(--green-900);margin:0 0 14px">Payment tracker — current settlement</h3><div id="farmerPaymentTimeline"></div><button class="btn btn-outline btn-small" style="margin-top:14px" type="button" onclick="downloadFarmerWeighbridgeSlip()">Download weighbridge slip (sample)</button></div>`;renderPaymentTimeline(document.getElementById('farmerPaymentTimeline'),2)}
-function downloadFarmerReceipt(x){if(typeof generateReceiptPDF==='function')generateReceiptPDF({id:x.id,date:x.date,crop:x.crop,qty:x.qty,amount:'₹'+x.amount.toLocaleString('en-IN'),status:x.status});else alert('Receipt generator is not available.')}function downloadFarmerWeighbridgeSlip(){if(!window.jspdf?.jsPDF){alert('PDF generator failed to load.');return}const {jsPDF}=window.jspdf,doc=new jsPDF({unit:'pt',format:[320,420]});doc.setFillColor(22,38,31);doc.rect(0,0,320,60,'F');doc.setTextColor(255,255,255);doc.setFontSize(15);doc.text('Digital Weighbridge Slip',20,34);doc.setTextColor(22,38,31);let y=92;const row=(a,b)=>{doc.setFont(undefined,'bold');doc.text(a,20,y);doc.setFont(undefined,'normal');doc.text(String(b),165,y);y+=26};row('Token','FS-4821');row('Center','Configured procurement centre');row('Gross weight','3820 kg');row('Tare weight','1420 kg');row('Net weight','2400 kg');row('Geofence check','Passed (sample)');row('Issued',new Date().toLocaleString('en-IN'));doc.setFontSize(9);doc.setTextColor(90,90,90);doc.text('Fasal Setu · Prototype for demonstration (SIH 2026)',20,y+20);doc.save('FasalSetu-Weighbridge-FS-4821.pdf')}
+async function loadFarmerPayments(){
+  const box = document.getElementById('paymentsContent');
+  if(!box) return;
+  box.innerHTML = '<div class="empty">Fetching live payment records from MongoDB database...</div>';
+  try {
+    const r = await dapi('/farmer/payments');
+    renderPayments(r.data || []);
+  } catch(e) {
+    box.innerHTML = `<div class="notice">Failed to fetch payment records: ${escD(e.message)}</div>`;
+  }
+}
+
+function renderPayments(pays){
+  const box = document.getElementById('paymentsContent');
+  if(!box) return;
+
+  if(!pays || !pays.length){
+    box.innerHTML = `
+      <div class="card payment-card" style="padding:28px;text-align:center">
+        <div style="font-size:3rem;margin-bottom:12px">💳</div>
+        <h3 style="margin:0 0 8px 0;color:var(--green-950)">No Procurement Payments Found</h3>
+        <p style="color:var(--ink-soft);max-width:520px;margin:0 auto 16px auto;font-size:0.9rem">
+          Once your crop weighment and procurement are completed at the Mandi Procurement Centre, your live payment record, method (UPI, Net Banking, Cash), UTR number, and official digital receipt will appear here.
+        </p>
+        <button class="btn btn-primary btn-small" onclick="showSection('bookings')">View Mandi Bookings →</button>
+      </div>
+    `;
+    return;
+  }
+
+  const totalPaid = pays.filter(x => String(x.status).toUpperCase() === 'PAID').reduce((sum, x) => sum + (Number(x.amount) || 0), 0);
+  const totalPending = pays.filter(x => String(x.status).toUpperCase() !== 'PAID').reduce((sum, x) => sum + (Number(x.amount) || 0), 0);
+
+  let html = `
+    <div class="payment-summary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px">
+      <div class="kpi card" style="padding:16px;background:linear-gradient(135deg, #154734, #2a5945);color:#fff">
+        <small style="color:#a8d5ba;text-transform:uppercase;font-size:0.75rem;font-weight:700">Total Received (Paid)</small>
+        <strong style="display:block;font-size:1.6rem;margin-top:4px">₹${totalPaid.toLocaleString('en-IN')}</strong>
+      </div>
+      <div class="kpi card" style="padding:16px;background:var(--paper);border-left:4px solid #eda335">
+        <small style="color:var(--ink-soft);text-transform:uppercase;font-size:0.75rem;font-weight:700">Pending Settlement</small>
+        <strong style="display:block;font-size:1.6rem;margin-top:4px;color:#d97706">₹${totalPending.toLocaleString('en-IN')}</strong>
+      </div>
+      <div class="kpi card" style="padding:16px;background:var(--paper)">
+        <small style="color:var(--ink-soft);text-transform:uppercase;font-size:0.75rem;font-weight:700">Total Procurements</small>
+        <strong style="display:block;font-size:1.6rem;margin-top:4px;color:var(--green-950)">${pays.length}</strong>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.2rem;color:var(--green-950);margin:0 0 14px 0">MY PAYMENTS</h3>
+    <div class="payment-cards-list" style="display:flex;flex-direction:column;gap:16px">
+  `;
+
+  pays.forEach((p, idx) => {
+    const isPaid = String(p.status || '').toUpperCase() === 'PAID';
+    const statusClass = isPaid ? 'status-active' : 'status-warn';
+    const bookingId = p.bookingId?.gatePassId || p.reference || ('FS-2026-' + String(idx + 125).padStart(5, '0'));
+    const cropName = p.crop || p.bookingId?.cropId?.name || 'Crop';
+    const quantityInTons = p.quantity ? `${p.quantity} Tons` : (p.bookingId?.quantity ? `${p.bookingId.quantity} Tons` : '—');
+    const centreName = p.centreId?.name || 'Procurement Centre';
+    const amount = Number(p.amount || 0).toLocaleString('en-IN');
+    const pDate = p.paymentDate || (p.updatedAt ? new Date(p.updatedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Pending');
+    const pTime = p.paymentTime || '';
+
+    html += `
+      <div class="card payment-card" style="padding:20px;border-radius:16px;border:1px solid ${isPaid ? 'rgba(42,89,69,0.3)' : 'rgba(237,163,53,0.3)'}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+          <div>
+            <div class="eyebrow" style="font-size:0.75rem;color:var(--ink-soft)">BOOKING ID: <strong style="color:var(--green-900)">${escD(bookingId)}</strong></div>
+            <h4 style="margin:4px 0 2px 0;font-size:1.15rem;color:var(--green-950)">🌾 ${escD(cropName)} Procurement</h4>
+            <div style="font-size:0.85rem;color:var(--ink-soft)">🏢 Procurement Centre: <strong>${escD(centreName)}</strong></div>
+          </div>
+          <div style="text-align:right">
+            <span class="status-pill ${statusClass}" style="font-size:0.85rem;font-weight:700">
+              ● ${escD(p.status || 'PENDING')}
+            </span>
+            <div style="font-size:1.4rem;font-weight:800;color:var(--green-900);margin-top:6px">₹${amount}</div>
+          </div>
+        </div>
+
+        <div style="background:var(--paper);padding:14px;border-radius:12px;margin-bottom:14px;border:1px solid rgba(0,0,0,0.05)">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
+            <div>
+              <small style="color:var(--ink-soft);display:block;font-size:0.75rem">QUANTITY</small>
+              <strong style="color:var(--green-950)">⚖️ ${escD(quantityInTons)}</strong>
+            </div>
+            <div>
+              <small style="color:var(--ink-soft);display:block;font-size:0.75rem">PAYMENT METHOD</small>
+              <strong style="color:var(--green-950)">💳 ${escD(p.paymentMethod || (isPaid ? 'Direct Transfer' : 'Awaiting Operator'))}</strong>
+            </div>
+            <div>
+              <small style="color:var(--ink-soft);display:block;font-size:0.75rem">TRANSACTION / RECEIPT ID</small>
+              <strong style="color:var(--green-950);font-family:monospace">${escD(p.transactionId || p.receiptNumber || '—')}</strong>
+            </div>
+            <div>
+              <small style="color:var(--ink-soft);display:block;font-size:0.75rem">PAYMENT DATE & TIME</small>
+              <strong style="color:var(--green-950)">🗓️ ${escD(pDate)} ${escD(pTime)}</strong>
+            </div>
+          </div>
+
+          ${p.remarks ? `<div style="margin-top:10px;font-size:0.825rem;color:var(--ink-soft);border-top:1px dashed rgba(0,0,0,0.1);padding-top:8px">
+            💬 <strong>Operator Remarks:</strong> ${escD(p.remarks)}
+          </div>` : ''}
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div style="font-size:0.85rem;color:${isPaid ? '#2a5945' : '#b45309'};font-weight:600">
+            ${isPaid ? '✓ Procurement payment has been recorded and confirmed by Procurement Operator.' : '⏳ Payment Status: PENDING. Your procurement payment has not been processed yet by the operator.'}
+          </div>
+          ${isPaid ? `
+            <button class="btn btn-outline btn-small" onclick="viewPaymentReceiptModal('${p._id}')">📄 View Official Receipt</button>
+          ` : `
+            <span style="font-size:0.8rem;color:var(--ink-soft)">Awaiting operator payment action</span>
+          `}
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  box.innerHTML = html;
+}
+
+let currentOperatorPaymentsList = [];
+
+async function loadOperatorPayments() {
+  const box = document.getElementById('operatorPaymentsContent');
+  if (!box) return;
+  box.innerHTML = '<div class="empty">Loading centre payment records from database...</div>';
+  try {
+    const r = await dapi('/operator/payments');
+    currentOperatorPaymentsList = r.data || [];
+    renderOperatorPaymentsUI(currentOperatorPaymentsList);
+  } catch (e) {
+    box.innerHTML = `<div class="notice">Failed to load payments: ${escD(e.message)}</div>`;
+  }
+}
+
+function renderOperatorPaymentsUI(pays, filter = 'ALL') {
+  const box = document.getElementById('operatorPaymentsContent');
+  if (!box) return;
+
+  const totalCount = pays.length;
+  const pendingCount = pays.filter(x => String(x.status).toUpperCase() === 'PENDING').length;
+  const paidCount = pays.filter(x => String(x.status).toUpperCase() === 'PAID').length;
+  const totalPaidAmount = pays.filter(x => String(x.status).toUpperCase() === 'PAID').reduce((sum, x) => sum + (Number(x.amount) || 0), 0);
+
+  let filtered = pays;
+  if (filter === 'PENDING') filtered = pays.filter(x => String(x.status).toUpperCase() === 'PENDING');
+  else if (filter === 'PAID') filtered = pays.filter(x => String(x.status).toUpperCase() === 'PAID');
+  else if (filter === 'UPI') filtered = pays.filter(x => String(x.paymentMethod).toUpperCase() === 'UPI');
+  else if (filter === 'NET_BANKING') filtered = pays.filter(x => String(x.paymentMethod).toUpperCase() === 'NET_BANKING');
+  else if (filter === 'CASH') filtered = pays.filter(x => String(x.paymentMethod).toUpperCase() === 'CASH');
+
+  box.innerHTML = `
+    <div class="dash-header" style="margin-bottom:18px">
+      <div>
+        <div class="eyebrow">PROCUREMENT PAYMENT DESK</div>
+        <h1>Centre Payment Processing & Records</h1>
+        <p>Select payment method (UPI, Net Banking, Cash) and record verified farmer procurement payments.</p>
+      </div>
+    </div>
+
+    <div class="payment-summary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px">
+      <div class="kpi card" style="padding:16px;background:var(--paper);border-left:4px solid #eda335">
+        <small style="color:var(--ink-soft);text-transform:uppercase;font-size:0.75rem;font-weight:700">Pending Payments</small>
+        <strong style="display:block;font-size:1.6rem;margin-top:4px;color:#d97706">${pendingCount}</strong>
+      </div>
+      <div class="kpi card" style="padding:16px;background:linear-gradient(135deg, #154734, #2a5945);color:#fff">
+        <small style="color:#a8d5ba;text-transform:uppercase;font-size:0.75rem;font-weight:700">Total Settled Amount</small>
+        <strong style="display:block;font-size:1.6rem;margin-top:4px">₹${totalPaidAmount.toLocaleString('en-IN')}</strong>
+      </div>
+      <div class="kpi card" style="padding:16px;background:var(--paper);border-left:4px solid var(--green-900)">
+        <small style="color:var(--ink-soft);text-transform:uppercase;font-size:0.75rem;font-weight:700">Settled Transactions</small>
+        <strong style="display:block;font-size:1.6rem;margin-top:4px;color:var(--green-950)">${paidCount} / ${totalCount}</strong>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <button class="btn ${filter==='ALL'?'btn-primary':'btn-outline'} btn-small" onclick="renderOperatorPaymentsUI(currentOperatorPaymentsList, 'ALL')">All (${totalCount})</button>
+      <button class="btn ${filter==='PENDING'?'btn-primary':'btn-outline'} btn-small" onclick="renderOperatorPaymentsUI(currentOperatorPaymentsList, 'PENDING')">⏳ Pending (${pendingCount})</button>
+      <button class="btn ${filter==='PAID'?'btn-primary':'btn-outline'} btn-small" onclick="renderOperatorPaymentsUI(currentOperatorPaymentsList, 'PAID')">✓ Paid (${paidCount})</button>
+      <button class="btn ${filter==='UPI'?'btn-primary':'btn-outline'} btn-small" onclick="renderOperatorPaymentsUI(currentOperatorPaymentsList, 'UPI')">📱 UPI</button>
+      <button class="btn ${filter==='NET_BANKING'?'btn-primary':'btn-outline'} btn-small" onclick="renderOperatorPaymentsUI(currentOperatorPaymentsList, 'NET_BANKING')">🏦 Net Banking</button>
+      <button class="btn ${filter==='CASH'?'btn-primary':'btn-outline'} btn-small" onclick="renderOperatorPaymentsUI(currentOperatorPaymentsList, 'CASH')">💵 Cash</button>
+    </div>
+
+    <div class="card payment-card" style="padding:0;overflow:hidden">
+      <div class="table-wrap">
+        <table class="pay-table" style="width:100%">
+          <thead>
+            <tr>
+              <th>Farmer</th>
+              <th>Booking ID</th>
+              <th>Crop</th>
+              <th>Quantity</th>
+              <th>Amount</th>
+              <th>Method</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.length ? filtered.map((p, i) => {
+              const farmerName = p.farmerId?.fullName || p.farmerId?.name || 'Farmer';
+              const farmerPhone = p.farmerId?.mobile || p.farmerId?.phone || '—';
+              const bookingId = p.bookingId?.gatePassId || p.reference || ('FS-2026-0012' + i);
+              const crop = p.crop || p.bookingId?.cropId?.name || 'Crop';
+              const qty = p.quantity ? `${p.quantity} Tons` : '—';
+              const amount = Number(p.amount || 0).toLocaleString('en-IN');
+              const isPaid = String(p.status).toUpperCase() === 'PAID';
+              const method = p.paymentMethod || '—';
+
+              return `
+                <tr>
+                  <td>
+                    <strong style="color:var(--green-950);display:block">${escD(farmerName)}</strong>
+                    <small style="color:var(--ink-soft)">📞 ${escD(farmerPhone)}</small>
+                  </td>
+                  <td><code style="font-weight:700;color:var(--green-900)">${escD(bookingId)}</code></td>
+                  <td><strong>🌾 ${escD(crop)}</strong></td>
+                  <td>⚖️ ${escD(qty)}</td>
+                  <td><strong style="color:var(--green-900)">₹${amount}</strong></td>
+                  <td><span class="tag" style="background:var(--paper);border:1px solid rgba(0,0,0,0.1);font-weight:600">${escD(method)}</span></td>
+                  <td><span class="status-pill ${isPaid ? 'status-active' : 'status-warn'}">● ${escD(p.status || 'PENDING')}</span></td>
+                  <td>
+                    ${!isPaid ? `
+                      <button class="btn btn-primary btn-small" onclick="openOperatorPaymentModal('${p._id}')">💳 Process Payment</button>
+                    ` : `
+                      <button class="btn btn-outline btn-small" onclick="viewPaymentReceiptModal('${p._id}')">📄 View Receipt</button>
+                    `}
+                  </td>
+                </tr>
+              `;
+            }).join('') : `
+              <tr>
+                <td colspan="8" style="text-align:center;padding:24px;color:var(--ink-soft)">No payment records found under "${filter}".</td>
+              </tr>
+            `}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function openOperatorPaymentModal(payId) {
+  const pay = (currentOperatorPaymentsList || []).find(x => x._id === payId);
+  if (!pay) {
+    alert('Payment details could not be found.');
+    return;
+  }
+
+  const farmerName = pay.farmerId?.fullName || pay.farmerId?.name || 'Farmer';
+  const farmerPhone = pay.farmerId?.mobile || pay.farmerId?.phone || '—';
+  const bookingId = pay.bookingId?.gatePassId || pay.reference || 'FS-2026-00125';
+  const crop = pay.crop || pay.bookingId?.cropId?.name || 'Crop';
+  const quantityInTons = pay.quantity ? `${pay.quantity} Tons` : '—';
+  const centreName = pay.centreId?.name || 'Assigned Procurement Centre';
+  const amountVal = Number(pay.amount || 0);
+  const amountStr = amountVal.toLocaleString('en-IN');
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+  const defaultUpiTx = 'UPI' + Math.floor(1000000000 + Math.random() * 9000000000);
+  const defaultNetTx = 'UTR' + Math.floor(1000000000 + Math.random() * 9000000000);
+  const defaultCashRec = 'CSH-REC-' + Math.floor(100000 + Math.random() * 900000);
+
+  let modalEl = document.getElementById('operatorPaymentModal');
+  if (!modalEl) {
+    modalEl = document.createElement('div');
+    modalEl.id = 'operatorPaymentModal';
+    modalEl.className = 'modal';
+    document.body.appendChild(modalEl);
+  }
+
+  modalEl.innerHTML = `
+    <div class="modal-card" style="width:min(620px, 95%);padding:28px">
+      <div class="modal-head" style="margin-bottom:16px">
+        <div>
+          <div class="eyebrow">PROCUREMENT PAYMENT PROCESSING</div>
+          <h3 style="margin:0;color:var(--green-950);font-size:1.4rem">Record Mandi Payment</h3>
+        </div>
+        <button type="button" class="btn btn-outline btn-small" onclick="closeOperatorPaymentModal()">✕</button>
+      </div>
+
+      <div style="background:var(--paper);padding:16px;border-radius:14px;border:1px solid rgba(42,89,69,0.15);margin-bottom:20px">
+        <h4 style="margin:0 0 10px 0;font-size:0.95rem;color:var(--green-900)">📋 Procurement & Farmer Details</h4>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;font-size:0.875rem">
+          <div><span style="color:var(--ink-soft)">Farmer Name:</span> <strong>${escD(farmerName)}</strong></div>
+          <div><span style="color:var(--ink-soft)">Mobile:</span> <strong>${escD(farmerPhone)}</strong></div>
+          <div><span style="color:var(--ink-soft)">Booking ID:</span> <code style="font-weight:700;color:var(--green-900)">${escD(bookingId)}</code></div>
+          <div><span style="color:var(--ink-soft)">Centre:</span> <strong>${escD(centreName)}</strong></div>
+          <div><span style="color:var(--ink-soft)">Crop:</span> <strong>🌾 ${escD(crop)}</strong></div>
+          <div><span style="color:var(--ink-soft)">Quantity:</span> <strong>⚖️ ${escD(quantityInTons)}</strong></div>
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px dashed rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:700;color:var(--ink-soft)">TOTAL PAYABLE AMOUNT:</span>
+          <span style="font-size:1.4rem;font-weight:800;color:var(--green-900)">₹${amountStr}</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <label style="font-weight:700;display:block;margin-bottom:8px;color:var(--green-950);font-size:0.9rem">Select Payment Method:</label>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="payMethodCardGroup">
+          <label style="border:2px solid var(--green-900);background:var(--paper);border-radius:12px;padding:12px;cursor:pointer;text-align:center;display:block;transition:all 0.2s" id="card-UPI">
+            <input type="radio" name="payMethodRadio" value="UPI" checked style="margin-right:6px" onchange="switchPayMethodUI('UPI')">
+            <div style="font-weight:700;color:var(--green-950);margin-top:4px">📱 UPI</div>
+            <small style="font-size:11px;color:var(--ink-soft)">BHIM / GPay / PhonePe</small>
+          </label>
+
+          <label style="border:1px solid rgba(0,0,0,0.15);background:var(--paper);border-radius:12px;padding:12px;cursor:pointer;text-align:center;display:block;transition:all 0.2s" id="card-NET_BANKING">
+            <input type="radio" name="payMethodRadio" value="NET_BANKING" style="margin-right:6px" onchange="switchPayMethodUI('NET_BANKING')">
+            <div style="font-weight:700;color:var(--green-950);margin-top:4px">🏦 Net Banking</div>
+            <small style="font-size:11px;color:var(--ink-soft)">NEFT / RTGS / IMPS</small>
+          </label>
+
+          <label style="border:1px solid rgba(0,0,0,0.15);background:var(--paper);border-radius:12px;padding:12px;cursor:pointer;text-align:center;display:block;transition:all 0.2s" id="card-CASH">
+            <input type="radio" name="payMethodRadio" value="CASH" style="margin-right:6px" onchange="switchPayMethodUI('CASH')">
+            <div style="font-weight:700;color:var(--green-950);margin-top:4px">💵 Cash</div>
+            <small style="font-size:11px;color:var(--ink-soft)">Counter Handover</small>
+          </label>
+        </div>
+      </div>
+
+      <form id="opPayForm" onsubmit="event.preventDefault(); proceedToPaymentConfirmation('${pay._id}');">
+        <div id="txIdFieldWrap" style="margin-bottom:14px">
+          <label id="txIdLabel" style="font-size:0.85rem;font-weight:700">UPI Transaction ID / UTR Number</label>
+          <input type="text" id="opTxIdInput" value="${defaultUpiTx}" required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font-family:monospace;font-weight:700">
+        </div>
+
+        <div id="cashNoticeWrap" style="display:none;background:#fff8e6;border-left:4px solid #eda335;padding:12px;border-radius:8px;margin-bottom:14px;font-size:0.85rem;color:#78350f">
+          <strong>⚠️ Payment Mode: Cash</strong>
+          <p style="margin:4px 0 0 0">Confirm physical cash handover of <strong>₹${amountStr}</strong> to farmer <strong>${escD(farmerName)}</strong>. Do not pretend that the application has transferred money through a bank when it has only recorded the payment.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+          <div>
+            <label style="font-size:0.85rem;font-weight:700">Payment Date</label>
+            <input type="text" id="opPayDateInput" value="${dateStr}" required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15)">
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:700">Payment Time</label>
+            <input type="text" id="opPayTimeInput" value="${timeStr}" required style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15)">
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px">
+          <label style="font-size:0.85rem;font-weight:700">Operator Remarks (Optional)</label>
+          <textarea id="opRemarksInput" rows="2" placeholder="e.g. Payment verified and settled at mandi counter." style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.15)"></textarea>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:12px">
+          <button type="button" class="btn btn-outline" onclick="closeOperatorPaymentModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Proceed to Confirmation →</button>
+        </div>
+      </form>
+
+      <div id="opConfirmBox" style="display:none;margin-top:16px;padding:18px;background:#f2f6f3;border:2px solid var(--green-900);border-radius:14px">
+        <h4 style="margin:0 0 10px 0;color:var(--green-950)">Confirm Payment Details</h4>
+        <div id="opConfirmSummary" style="font-size:0.9rem;margin-bottom:16px"></div>
+        <div style="display:flex;justify-content:flex-end;gap:12px">
+          <button type="button" class="btn btn-outline btn-small" onclick="backToPayEdit()">← Edit</button>
+          <button type="button" class="btn btn-primary btn-small" onclick="submitFinalOperatorPayment('${pay._id}')">✓ CONFIRM PAYMENT NOW</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modalEl.classList.add('open');
+  window._defaultUpiTx = defaultUpiTx;
+  window._defaultNetTx = defaultNetTx;
+  window._defaultCashRec = defaultCashRec;
+}
+
+function switchPayMethodUI(method) {
+  ['UPI', 'NET_BANKING', 'CASH'].forEach(m => {
+    const card = document.getElementById('card-' + m);
+    if (card) {
+      if (m === method) {
+        card.style.border = '2px solid var(--green-900)';
+        card.style.boxShadow = '0 2px 8px rgba(42,89,69,0.15)';
+      } else {
+        card.style.border = '1px solid rgba(0,0,0,0.15)';
+        card.style.boxShadow = 'none';
+      }
+    }
+  });
+
+  const txLabel = document.getElementById('txIdLabel');
+  const txInput = document.getElementById('opTxIdInput');
+  const cashNotice = document.getElementById('cashNoticeWrap');
+
+  if (method === 'UPI') {
+    if (txLabel) txLabel.innerText = 'UPI Transaction ID / UTR Number';
+    if (txInput) txInput.value = window._defaultUpiTx || ('UPI' + Date.now());
+    if (cashNotice) cashNotice.style.display = 'none';
+  } else if (method === 'NET_BANKING') {
+    if (txLabel) txLabel.innerText = 'Bank Transaction ID / UTR Number';
+    if (txInput) txInput.value = window._defaultNetTx || ('UTR' + Date.now());
+    if (cashNotice) cashNotice.style.display = 'none';
+  } else if (method === 'CASH') {
+    if (txLabel) txLabel.innerText = 'Cash Receipt Number';
+    if (txInput) txInput.value = window._defaultCashRec || ('CSH-REC-' + Date.now());
+    if (cashNotice) cashNotice.style.display = 'block';
+  }
+}
+
+function closeOperatorPaymentModal() {
+  const modalEl = document.getElementById('operatorPaymentModal');
+  if (modalEl) modalEl.classList.remove('open');
+}
+
+function proceedToPaymentConfirmation(payId) {
+  const pay = (currentOperatorPaymentsList || []).find(x => x._id === payId);
+  if (!pay) return;
+
+  const method = document.querySelector('input[name="payMethodRadio"]:checked')?.value || 'UPI';
+  const txId = document.getElementById('opTxIdInput')?.value?.trim();
+  const remarks = document.getElementById('opRemarksInput')?.value?.trim();
+
+  if (!txId) {
+    alert('Please enter a valid Transaction / Receipt ID.');
+    return;
+  }
+
+  const farmerName = pay.farmerId?.fullName || pay.farmerId?.name || 'Farmer';
+  const bookingId = pay.bookingId?.gatePassId || pay.reference || 'FS-2026-00125';
+  const crop = pay.crop || pay.bookingId?.cropId?.name || 'Crop';
+  const quantityInTons = pay.quantity ? `${pay.quantity} Tons` : '—';
+  const amountStr = Number(pay.amount || 0).toLocaleString('en-IN');
+
+  const summaryHTML = `
+    <div style="line-height:1.6">
+      <div><strong>Farmer:</strong> ${escD(farmerName)}</div>
+      <div><strong>Booking ID:</strong> ${escD(bookingId)}</div>
+      <div><strong>Crop:</strong> ${escD(crop)} (${escD(quantityInTons)})</div>
+      <div><strong>Amount:</strong> <strong style="color:var(--green-900);font-size:1.1rem">₹${amountStr}</strong></div>
+      <div><strong>Payment Method:</strong> ${escD(method)}</div>
+      <div><strong>Transaction / Receipt ID:</strong> <code>${escD(txId)}</code></div>
+      ${remarks ? `<div><strong>Remarks:</strong> ${escD(remarks)}</div>` : ''}
+    </div>
+  `;
+
+  document.getElementById('opConfirmSummary').innerHTML = summaryHTML;
+  document.getElementById('opPayForm').style.display = 'none';
+  document.getElementById('opConfirmBox').style.display = 'block';
+}
+
+function backToPayEdit() {
+  document.getElementById('opConfirmBox').style.display = 'none';
+  document.getElementById('opPayForm').style.display = 'block';
+}
+
+async function submitFinalOperatorPayment(payId) {
+  const method = document.querySelector('input[name="payMethodRadio"]:checked')?.value || 'UPI';
+  const txId = document.getElementById('opTxIdInput')?.value?.trim();
+  const pDate = document.getElementById('opPayDateInput')?.value?.trim();
+  const pTime = document.getElementById('opPayTimeInput')?.value?.trim();
+  const remarks = document.getElementById('opRemarksInput')?.value?.trim();
+
+  try {
+    const payload = {
+      paymentMethod: method,
+      transactionId: (method === 'CASH') ? undefined : txId,
+      receiptNumber: (method === 'CASH') ? txId : undefined,
+      paymentDate: pDate,
+      paymentTime: pTime,
+      remarks
+    };
+
+    const r = await dapi('/operator/payments/' + payId + '/process', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+
+    alert('✓ Payment recorded successfully! Status updated to PAID and notification sent to Farmer Dashboard.');
+    closeOperatorPaymentModal();
+    loadOperatorPayments();
+    if (typeof loadOperatorProcurement === 'function') loadOperatorProcurement();
+  } catch (e) {
+    alert('Payment processing failed: ' + e.message);
+  }
+}
+
+async function viewPaymentReceiptModal(payId) {
+  try {
+    let pay = (currentOperatorPaymentsList || []).find(x => x._id === payId);
+    if (!pay) {
+      const r = await dapi('/payments/booking/' + payId).catch(() => null);
+      if (r?.data) pay = r.data;
+    }
+    if (!pay) {
+      alert('Payment details could not be loaded.');
+      return;
+    }
+
+    const farmerName = pay.farmerId?.fullName || pay.farmerId?.name || 'Farmer';
+    const farmerMobile = pay.farmerId?.mobile || pay.farmerId?.phone || '—';
+    const bookingId = pay.bookingId?.gatePassId || pay.reference || 'FS-2026-00125';
+    const centreName = pay.centreId?.name || 'Procurement Centre';
+    const crop = pay.crop || pay.bookingId?.cropId?.name || 'Crop';
+    const quantityInTons = pay.quantity ? `${pay.quantity} Tons` : '—';
+    const amountStr = Number(pay.amount || 0).toLocaleString('en-IN');
+    const method = pay.paymentMethod || 'UPI';
+    const txId = pay.transactionId || pay.receiptNumber || '—';
+    const dateStr = pay.paymentDate || new Date(pay.updatedAt || Date.now()).toLocaleDateString('en-IN');
+    const timeStr = pay.paymentTime || '';
+
+    let modalEl = document.getElementById('paymentReceiptModal');
+    if (!modalEl) {
+      modalEl = document.createElement('div');
+      modalEl.id = 'paymentReceiptModal';
+      modalEl.className = 'modal';
+      document.body.appendChild(modalEl);
+    }
+
+    modalEl.innerHTML = `
+      <div class="modal-card" style="width:min(520px, 95%);padding:28px">
+        <div style="text-align:center;border-bottom:2px solid var(--green-900);padding-bottom:14px;margin-bottom:18px">
+          <div style="font-size:1.8rem;margin-bottom:4px">🌾</div>
+          <h2 style="margin:0;color:var(--green-950);font-size:1.3rem;letter-spacing:0.5px">FASAL SETU</h2>
+          <div style="font-size:0.75rem;font-weight:700;color:var(--green-900);text-transform:uppercase;letter-spacing:1px">PROCUREMENT PAYMENT RECEIPT</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;background:#f2f6f3;padding:10px 14px;border-radius:10px">
+          <div>
+            <span style="font-size:0.75rem;color:var(--ink-soft)">Status:</span>
+            <span class="status-pill status-active" style="margin-left:6px;font-weight:700">● ${escD(pay.status || 'PAID')}</span>
+          </div>
+          <div style="font-size:0.8rem;color:var(--ink-soft)">
+            🗓️ ${escD(dateStr)} ${escD(timeStr)}
+          </div>
+        </div>
+
+        <div style="line-height:1.7;font-size:0.9rem;color:var(--green-950);margin-bottom:18px">
+          <div style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid rgba(0,0,0,0.06);padding:6px 0">
+            <span style="color:var(--ink-soft)">Farmer Name:</span> <strong>${escD(farmerName)}</strong>
+          </div>
+          <div style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid rgba(0,0,0,0.06);padding:6px 0">
+            <span style="color:var(--ink-soft)">Mobile Number:</span> <strong>${escD(farmerMobile)}</strong>
+          </div>
+          <div style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid rgba(0,0,0,0.06);padding:6px 0">
+            <span style="color:var(--ink-soft)">Booking ID:</span> <code style="font-weight:700;color:var(--green-900)">${escD(bookingId)}</code>
+          </div>
+          <div style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid rgba(0,0,0,0.06);padding:6px 0">
+            <span style="color:var(--ink-soft)">Procurement Centre:</span> <strong>${escD(centreName)}</strong>
+          </div>
+          <div style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid rgba(0,0,0,0.06);padding:6px 0">
+            <span style="color:var(--ink-soft)">Crop:</span> <strong>🌾 ${escD(crop)}</strong>
+          </div>
+          <div style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid rgba(0,0,0,0.06);padding:6px 0">
+            <span style="color:var(--ink-soft)">Quantity:</span> <strong>⚖️ ${escD(quantityInTons)}</strong>
+          </div>
+          <div style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid rgba(0,0,0,0.06);padding:6px 0">
+            <span style="color:var(--ink-soft)">Payment Method:</span> <strong>💳 ${escD(method)}</strong>
+          </div>
+          <div style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid rgba(0,0,0,0.06);padding:6px 0">
+            <span style="color:var(--ink-soft)">Tx / UTR / Receipt ID:</span> <code style="font-weight:700">${escD(txId)}</code>
+          </div>
+        </div>
+
+        <div style="background:var(--paper);border:2px solid var(--green-900);padding:14px;border-radius:12px;text-align:center;margin-bottom:20px">
+          <small style="color:var(--ink-soft);text-transform:uppercase;font-size:0.75rem;font-weight:700">Total Settlement Amount Paid</small>
+          <div style="font-size:1.8rem;font-weight:800;color:var(--green-900);margin-top:2px">₹${amountStr}</div>
+        </div>
+
+        ${pay.remarks ? `<p style="font-size:0.8rem;color:var(--ink-soft);margin-bottom:16px">💬 <em>Remarks: ${escD(pay.remarks)}</em></p>` : ''}
+
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <button type="button" class="btn btn-outline btn-small" onclick="document.getElementById('paymentReceiptModal').classList.remove('open')">Close</button>
+          <button type="button" class="btn btn-primary btn-small" onclick="downloadReceiptPDF('${escD(bookingId)}', '${escD(farmerName)}', '${escD(crop)}', '${escD(quantityInTons)}', '${amountStr}', '${escD(method)}', '${escD(txId)}', '${escD(dateStr)}')">📄 Download PDF Receipt</button>
+        </div>
+      </div>
+    `;
+
+    modalEl.classList.add('open');
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+function downloadReceiptPDF(bookingId, farmer, crop, qty, amount, method, txId, dateStr) {
+  if (!window.jspdf?.jsPDF) { alert('PDF generator loading...'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: [400, 520] });
+
+  doc.setFillColor(42, 89, 69);
+  doc.rect(0, 0, 400, 70, 'F');
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.text('FASAL SETU PAYMENT RECEIPT', 20, 42);
+
+  doc.setTextColor(30, 41, 59);
+  doc.setFontSize(11);
+
+  let y = 100;
+  const addRow = (label, val) => {
+    doc.setFont(undefined, 'bold');
+    doc.text(label, 20, y);
+    doc.setFont(undefined, 'normal');
+    doc.text(String(val), 170, y);
+    y += 24;
+  };
+
+  addRow('Booking Reference:', bookingId);
+  addRow('Farmer Name:', farmer);
+  addRow('Crop Name:', crop);
+  addRow('Procurement Qty:', qty);
+  addRow('Amount Paid:', '₹' + amount);
+  addRow('Payment Method:', method);
+  addRow('Transaction ID / UTR:', txId);
+  addRow('Payment Date:', dateStr);
+  addRow('Payment Status:', 'PAID');
+
+  doc.setDrawColor(200, 200, 200);
+  doc.line(20, y + 10, 380, y + 10);
+
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text('Digitally Issued by Mandi Procurement Operator · Fasal Setu', 20, y + 30);
+  doc.save(`FasalSetu-Receipt-${bookingId}.pdf`);
+}
 async function loadGrievances(){
   const box=document.getElementById('grievanceContent');
   box.innerHTML=`<form id="gForm" class="card form-stack">
@@ -2304,7 +2793,7 @@ async function loadOperatorQuality(){
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <div>
           <h3 style="margin:0;color:var(--green-950)">🔬 Crop Quality Check & Multi-Photo AI Analysis</h3>
-          <p class="small" style="margin:2px 0 0 0">Mandatory: Upload at least 5 crop photos (different angles) for AI grading analysis</p>
+          <p class="small" style="margin:2px 0 0 0">Upload at least 5 crop photos (different angles) for AI grading analysis, then complete physical check.</p>
         </div>
         <span class="status-pill status-active">5-Image AI Engine Active</span>
       </div>
@@ -2315,62 +2804,177 @@ async function loadOperatorQuality(){
         const b=x.booking||{};
         const isDone=['QUALITY_PASSED','QUALITY_REJECTED','WEIGHED','PROCURED','COMPLETED'].includes(p.status);
 
-        return `<div class="panel" style="margin-top:16px;border: 1px solid rgba(42,89,69,0.2)">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        return `<div class="panel" style="margin-top:16px; border: 1.5px solid rgba(42,89,69,0.25); border-radius:16px; padding:18px; background:#fff">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px">
             <div>
-              <span class="eyebrow">TOKEN: ${escD(q.token)} · GATE PASS: ${escD(b.gatePassId||q.gatePassId||'—')}</span>
-              <h4 style="margin:4px 0 2px 0;font-size:1.1rem;color:var(--green-950)">🌾 ${escD(b.cropId?.name||p.cropId?.name||'Crop')} — ${b.quantity||0} quintals</h4>
-              <p style="margin:0;font-size:0.85rem;color:var(--ink-soft)">Farmer: <strong>${escD(q.farmerId?.userId?.name||'Farmer')}</strong> (${escD(q.farmerId?.userId?.phone||'—')})</p>
+              <span class="eyebrow" style="color:var(--green-900)">TOKEN: ${escD(q.token)} · GATE PASS: ${escD(b.gatePassId||q.gatePassId||'—')}</span>
+              <h4 style="margin:4px 0 2px 0; font-size:1.15rem; color:var(--green-950)">🌾 ${escD(b.cropId?.name||p.cropId?.name||'Crop')} — ${b.quantity||0} Tons</h4>
+              <p style="margin:0; font-size:0.875rem; color:var(--ink-soft)">Farmer: <strong>${escD(q.farmerId?.userId?.name||'Farmer')}</strong> (${escD(q.farmerId?.userId?.phone||'—')})</p>
             </div>
             <span class="status-pill ${p.status==='QUALITY_PASSED'?'status-active':p.status==='QUALITY_REJECTED'?'status-warn':'status-active'}">${escD(p.status||'PENDING_QUALITY')}</span>
           </div>
 
-          ${!isDone?`
-            <div style="margin-top:14px;padding:14px;background:var(--paper);border-radius:12px">
-              <h5 style="margin:0 0 8px 0;color:var(--green-950)">📷 Upload 5 Crop Photos for AI Quality Grading</h5>
-              
-              <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px" id="imgGrid-${p._id}">
-                ${[1,2,3,4,5].map(idx=>`
-                  <div style="border: 2px dashed #b5c7bc; border-radius: 8px; padding: 10px; text-align: center; background: #fff">
-                    <div style="font-size: 0.75rem; font-weight:700; color:var(--green-900)">Photo ${idx}</div>
-                    <input type="file" accept="image/*" class="quality-img-input-${p._id}" style="margin-top:6px; font-size:0.7rem; width:100%" onchange="previewQualityImage(this, 'prev-${p._id}-${idx}')">
-                    <img id="prev-${p._id}-${idx}" style="display:none; margin-top:6px; width:100%; height:60px; object-fit:cover; border-radius:4px">
+          ${!isDone ? `
+            <!-- STEP 1: MULTI-PHOTO AI QUALITY ASSISTANCE -->
+            <div style="margin-top:14px; padding:16px; background:var(--paper); border-radius:14px; border:1px solid rgba(42,89,69,0.12)">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                <div>
+                  <h5 style="margin:0; font-size:1rem; color:var(--green-950)">🤖 AI-ASSISTED CROP QUALITY CHECK</h5>
+                  <p class="small" style="margin:2px 0 0 0; color:var(--ink-soft)">Upload at least 5 crop images (different angles). AI assists assessment; final decision remains with staff.</p>
+                </div>
+                <span id="imgCounter-${p._id}" style="font-size:0.8rem; font-weight:700; color:#c0392b; background:#fff; padding:4px 10px; border-radius:8px; border:1px solid #ddd">0 / 5 photos selected</span>
+              </div>
+
+              <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px" id="imgGrid-${p._id}">
+                ${[1,2,3,4,5].map(idx => `
+                  <div style="border: 2px dashed #b5c7bc; border-radius: 10px; padding: 10px; text-align: center; background: #fff; position:relative">
+                    <div style="font-size: 0.75rem; font-weight:700; color:var(--green-900); margin-bottom:4px">
+                      ${idx === 1 ? '📷 Photo 1 (Front)' : idx === 2 ? '📷 Photo 2 (Top)' : idx === 3 ? '📷 Photo 3 (Close-up)' : idx === 4 ? '📷 Photo 4 (Side)' : '📷 Photo 5 (Spread)'}
+                    </div>
+                    <input type="file" accept="image/*" class="quality-img-input-${p._id}" data-slot="${idx}" style="font-size:0.7rem; width:100%" onchange="handleQualityImgChange(this, '${p._id}', ${idx})">
+                    <img id="prev-${p._id}-${idx}" style="display:none; margin-top:6px; width:100%; height:75px; object-fit:cover; border-radius:6px; border:1px solid #ccc">
+                    <button id="rem-${p._id}-${idx}" type="button" class="btn btn-outline btn-small" style="display:none; margin-top:4px; font-size:0.65rem; padding:2px 6px; width:100%; color:#b00; border-color:#b00" onclick="removeQualityImgSlot('${p._id}', ${idx})">✕ Remove</button>
                   </div>
                 `).join('')}
               </div>
 
-              <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-                <button class="btn btn-outline btn-small" type="button" onclick="runAIGrading('${p._id}', '${b.cropId?.name||p.cropId?.name||'Wheat'}')">🤖 Analyze with Python AI Microservice</button>
-                <span class="small" id="aiStatus-${p._id}" style="color:var(--ink-soft)">Select 5 crop images to run AI test</span>
+              <div style="margin-top:14px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+                <button id="aiBtn-${p._id}" class="btn btn-outline btn-small" type="button" disabled onclick="runAIGrading('${p._id}', '${b.cropId?.name||p.cropId?.name||'Wheat'}')">🤖 Start AI Quality Analysis</button>
+                <span class="small" id="aiStatus-${p._id}" style="color:var(--ink-soft)">Select minimum 5 photos to enable AI test</span>
               </div>
 
               <div id="aiResultBox-${p._id}" style="margin-top:12px"></div>
+            </div>
 
-              <div class="form-grid" style="margin-top:14px">
+            <!-- STEP 2: PHYSICAL QUALITY CHECK BY PROCUREMENT STAFF -->
+            <div style="margin-top:16px; padding:16px; background:#f7f9f7; border-radius:14px; border:1.5px solid rgba(42,89,69,0.2)">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid rgba(42,89,69,0.1); padding-bottom:8px">
+                <h5 style="margin:0; font-size:1.05rem; color:var(--green-950)">📋 PHYSICAL QUALITY CHECK BY PROCUREMENT STAFF</h5>
+                <span class="status-pill status-active">Mandatory Physical Inspection</span>
+              </div>
+
+              <div class="form-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px">
                 <div>
-                  <label>Final Mandi Quality Grade</label>
-                  <select id="grade-${p._id}">
-                    <option value="Grade A">Grade A (FAQ — Premium MSP)</option>
-                    <option value="Grade B">Grade B (3% Price Deduction)</option>
-                    <option value="Below Grade">Below Grade (Reject)</option>
+                  <label style="font-size:0.8rem; font-weight:700">Sample Inspected?</label>
+                  <select id="physInspected-${p._id}">
+                    <option value="Yes" selected>Yes</option>
+                    <option value="No">No</option>
                   </select>
                 </div>
                 <div>
-                  <label>Grade Notes / Observations</label>
-                  <input id="reason-${p._id}" placeholder="e.g. Clean grain, moisture 11.8%">
+                  <label style="font-size:0.8rem; font-weight:700">Overall Crop Condition</label>
+                  <select id="physCondition-${p._id}">
+                    <option value="Good" selected>Good</option>
+                    <option value="Average">Average</option>
+                    <option value="Poor">Poor</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700">Moisture Level (%)</label>
+                  <input id="physMoisture-${p._id}" type="number" min="0" max="30" step="0.1" value="11.5" placeholder="e.g. 11.5">
+                </div>
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700">Foreign Material</label>
+                  <select id="physForeign-${p._id}">
+                    <option value="None" selected>None</option>
+                    <option value="Low">Low (&lt; 1%)</option>
+                    <option value="Medium">Medium (1-3%)</option>
+                    <option value="High">High (&gt; 3%)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700">Visible Damage</label>
+                  <select id="physDamage-${p._id}">
+                    <option value="None" selected>None</option>
+                    <option value="Low">Low (&lt; 2%)</option>
+                    <option value="Medium">Medium (2-5%)</option>
+                    <option value="High">High (&gt; 5%)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700">Insect / Pest Damage</label>
+                  <select id="physPest-${p._id}">
+                    <option value="None" selected>None</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700">Grain Discoloration</label>
+                  <select id="physDiscolor-${p._id}">
+                    <option value="None" selected>None</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700">Grain Quality Grade</label>
+                  <select id="physGrade-${p._id}">
+                    <option value="Grade A" selected>Grade A (FAQ)</option>
+                    <option value="Grade B">Grade B</option>
+                    <option value="Below Grade">Below Grade</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700">Physical Sample Weight (Tons)</label>
+                  <input id="physWeight-${p._id}" type="number" min="0.01" step="0.01" value="${b.quantity||1}">
+                </div>
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700">Physical Check Status</label>
+                  <select id="physStatus-${p._id}">
+                    <option value="Completed" selected>Completed</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Pending">Pending</option>
+                  </select>
+                </div>
+                <div style="grid-column: span 2">
+                  <label style="font-size:0.8rem; font-weight:700">Operator Remarks / Notes</label>
+                  <input id="physRemarks-${p._id}" value="Physical inspection conducted at procurement centre. Grain clean and dry." placeholder="e.g. Sample clean, moisture 11.5%, FAQ compliant">
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 3: FINAL QUALITY DECISION -->
+            <div style="margin-top:16px; padding:16px; background:#fff; border-radius:14px; border:2px solid var(--green-700)">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                <h5 style="margin:0; font-size:1.1rem; color:var(--green-950)">✅ FINAL QUALITY DECISION</h5>
+                <span class="status-pill status-active" style="font-weight:700">Confirmed by Procurement Operator</span>
+              </div>
+              
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; background:var(--paper); padding:12px; border-radius:10px">
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700">Operator's Final Mandi Grade</label>
+                  <select id="grade-${p._id}" style="margin-top:4px; font-weight:700">
+                    <option value="Grade A">Grade A (FAQ — Premium Full MSP)</option>
+                    <option value="Grade B">Grade B (3% Price Deduction)</option>
+                    <option value="Below Grade">Below Grade (Reject Lot)</option>
+                  </select>
+                </div>
+                <div style="font-size:0.85rem; display:flex; flex-direction:column; justify-content:center">
+                  <div>Operator Name: <strong>${escD(currentUser()?.name || 'Procurement Operator')}</strong></div>
+                  <div>Procurement Centre: <strong>${escD(currentUser()?.centreId?.name || 'Main Procurement Mandi')}</strong></div>
+                  <div>Inspection Time: <strong>${new Date().toLocaleString('en-IN')}</strong></div>
                 </div>
               </div>
 
-              <div style="margin-top:14px;display:flex;gap:12px">
-                <button class="btn btn-primary btn-small" onclick="operatorQuality('${p._id}','PASS')">✓ Pass Quality & Send to Weighbridge</button>
-                <button class="btn btn-outline btn-small" style="color:#b00;border-color:#b00" onclick="operatorQuality('${p._id}','REJECT')">✕ Reject Lot</button>
+              <div style="display:flex; gap:12px; justify-content:flex-end">
+                <button class="btn btn-outline" style="color:#b00; border-color:#b00; padding:10px 18px" onclick="operatorQualityConfirm('${p._id}', 'REJECT')">✕ REJECT LOT</button>
+                <button class="btn btn-primary" style="padding:10px 24px; font-weight:700" onclick="operatorQualityConfirm('${p._id}', 'PASS')">✓ CONFIRM QUALITY & COMPLETE CHECK</button>
               </div>
             </div>
-          `:`
-            <div style="margin-top:10px;padding:10px 14px;background:rgba(42,89,69,0.05);border-radius:8px">
-              <div>Quality Status: <strong>${escD(p.quality?.grade||p.status)}</strong></div>
-              <div class="small">Observations: ${escD(p.quality?.recommendations||p.quality?.observations?.join(', ')||"Quality check completed")}</div>
-              <button class="btn btn-outline btn-small" style="margin-top:8px" onclick="showSection('weighment')">Proceed to Weighment →</button>
+          ` : `
+            <div style="margin-top:12px; padding:14px; background:rgba(42,89,69,0.06); border-radius:12px; border:1px solid rgba(42,89,69,0.15)">
+              <div style="display:flex; justify-content:space-between; align-items:center">
+                <div>
+                  <strong style="color:var(--green-950); font-size:1.05rem">Final Decision: ${escD(p.finalDecision?.finalGrade || p.quality?.grade || p.status)}</strong>
+                  <p class="small" style="margin:2px 0 0 0; color:var(--ink-soft)">Confirmed by Operator: <strong>${escD(p.finalDecision?.operatorName || 'Procurement Operator')}</strong> at ${p.finalDecision?.confirmedAt ? new Date(p.finalDecision.confirmedAt).toLocaleString('en-IN') : 'Centre'}</p>
+                </div>
+                <span class="status-pill status-active">${escD(p.status)}</span>
+              </div>
+              <div class="small" style="margin-top:8px; color:var(--ink-soft)">Remarks: ${escD(p.finalDecision?.operatorRemarks || p.quality?.recommendations || 'Quality check completed')}</div>
+              <button class="btn btn-outline btn-small" style="margin-top:10px" onclick="showSection('weighment')">Proceed to Weighment →</button>
             </div>
           `}
         </div>`;
@@ -2381,19 +2985,58 @@ async function loadOperatorQuality(){
   }
 }
 
-function previewQualityImage(input, imgId) {
+window.handleQualityImgChange = function(input, procId, idx) {
   if (input.files && input.files[0]) {
     const reader = new FileReader();
     reader.onload = function(e) {
-      const img = document.getElementById(imgId);
+      input.dataset.base64 = e.target.result;
+      const img = document.getElementById(`prev-${procId}-${idx}`);
+      const remBtn = document.getElementById(`rem-${procId}-${idx}`);
       if (img) {
         img.src = e.target.result;
         img.style.display = 'block';
       }
+      if (remBtn) remBtn.style.display = 'inline-block';
+      updateImgCounter(procId);
     };
     reader.readAsDataURL(input.files[0]);
   }
-}
+};
+
+window.removeQualityImgSlot = function(procId, idx) {
+  const input = document.querySelector(`.quality-img-input-${procId}[data-slot="${idx}"]`);
+  const img = document.getElementById(`prev-${procId}-${idx}`);
+  const remBtn = document.getElementById(`rem-${procId}-${idx}`);
+  if (input) {
+    input.value = '';
+    delete input.dataset.base64;
+  }
+  if (img) {
+    img.src = '';
+    img.style.display = 'none';
+  }
+  if (remBtn) remBtn.style.display = 'none';
+  updateImgCounter(procId);
+};
+
+window.updateImgCounter = function(procId) {
+  const inputs = document.querySelectorAll(`.quality-img-input-${procId}`);
+  let count = 0;
+  inputs.forEach(inp => {
+    if (inp.dataset.base64 || (inp.files && inp.files[0])) count++;
+  });
+  const counterEl = document.getElementById(`imgCounter-${procId}`);
+  const aiBtn = document.getElementById(`aiBtn-${procId}`);
+  if (counterEl) {
+    counterEl.textContent = `${count} / 5 photos selected (Minimum 5 required)`;
+    counterEl.style.color = count >= 5 ? 'var(--green-900)' : '#c0392b';
+  }
+  if (aiBtn) {
+    aiBtn.disabled = count < 5;
+  }
+};
+
+window.lastAiResults = window.lastAiResults || {};
 
 async function runAIGrading(procId, cropName) {
   const inputs = document.querySelectorAll(`.quality-img-input-${procId}`);
@@ -2402,7 +3045,8 @@ async function runAIGrading(procId, cropName) {
   
   const files = [];
   inputs.forEach(inp => {
-    if (inp.files && inp.files[0]) files.push(inp.files[0]);
+    if (inp.dataset.base64) files.push(inp.dataset.base64);
+    else if (inp.files && inp.files[0]) files.push(inp.files[0]);
   });
 
   if (files.length < 5) {
@@ -2413,7 +3057,7 @@ async function runAIGrading(procId, cropName) {
   statusEl.textContent = 'Uploading 5 images to Python AI microservice for grading...';
   
   try {
-    const dataUrls = await Promise.all(files.map(f => new Promise((resolve) => {
+    const dataUrls = await Promise.all(files.map(f => typeof f === 'string' ? Promise.resolve(f) : new Promise((resolve) => {
       const r = new FileReader();
       r.onload = () => resolve(r.result);
       r.readAsDataURL(f);
@@ -2429,21 +3073,23 @@ async function runAIGrading(procId, cropName) {
     });
 
     const ai = res.data || {};
+    window.lastAiResults[procId] = ai;
     statusEl.textContent = '✓ AI Analysis Complete!';
     
-    resultBox.innerHTML = `<div class="grain-result" style="background:#fff;border:1px solid var(--green-700);border-radius:10px;padding:12px;margin-top:8px">
+    resultBox.innerHTML = `<div class="grain-result" style="background:#fff;border:1.5px solid var(--green-700);border-radius:12px;padding:14px;margin-top:10px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong style="color:var(--green-950);font-size:1.1rem">AI Recommended Grade: ${escD(ai.overallGrade)}</strong>
+        <strong style="color:var(--green-950);font-size:1.1rem">🤖 AI Suggested Grade: ${escD(ai.overallGrade)}</strong>
         <span class="status-pill status-active">Confidence: ${ai.confidenceScore}%</span>
       </div>
-      <div class="grain-metrics" style="margin:10px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--paper);padding:8px;border-radius:8px">
-        <div><span>Moisture:</span> <strong>${ai.metrics?.moisturePct}%</strong></div>
+      <div class="grain-metrics" style="margin:10px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--paper);padding:10px;border-radius:8px">
+        <div><span>Moisture Indicator:</span> <strong>${ai.metrics?.moisturePct}%</strong></div>
         <div><span>Discoloration:</span> <strong>${ai.metrics?.discolorationPct}%</strong></div>
         <div><span>Foreign Matter:</span> <strong>${ai.metrics?.foreignMatterPct}%</strong></div>
         <div><span>Broken Grain:</span> <strong>${ai.metrics?.brokenGrainPct}%</strong></div>
       </div>
-      <div style="font-weight:700;color:var(--green-900)">Suggested Rate: ₹${ai.adjustedRate?.toLocaleString('en-IN')}/qtl (Deduction: ${ai.deductionPct}%)</div>
-      <p class="small" style="margin:4px 0 0 0;color:var(--ink-soft)">AI Observations: ${escD((ai.observations||[]).join('; '))}</p>
+      <div style="font-weight:700;color:var(--green-900)">Suggested Mandi Rate: ₹${ai.adjustedRate?.toLocaleString('en-IN')}/Ton (Deduction: ${ai.deductionPct}%)</div>
+      <p class="small" style="margin:6px 0 0 0;color:var(--ink-soft)">AI Observations: ${escD((ai.observations||[]).join('; '))}</p>
+      <div style="font-size:0.75rem;color:#7f8c8d;margin-top:4px;font-style:italic">Note: AI prediction is an assistance tool for mandi operators. The final grade is determined by operator physical check.</div>
     </div>`;
 
     const gradeSelect = document.getElementById(`grade-${procId}`);
@@ -2453,15 +3099,82 @@ async function runAIGrading(procId, cropName) {
       else gradeSelect.value = 'Below Grade';
     }
 
-    const reasonInput = document.getElementById(`reason-${procId}`);
-    if (reasonInput) {
-      reasonInput.value = `AI Score ${ai.confidenceScore}%: ${ai.overallGrade} (${ai.observations?.[0]||'Passed AI test'})`;
+    const physGradeSelect = document.getElementById(`physGrade-${procId}`);
+    if (physGradeSelect) {
+      if (ai.overallGrade?.includes('Grade A') || ai.overallGrade?.includes('FAQ')) physGradeSelect.value = 'Grade A';
+      else if (ai.overallGrade?.includes('Grade B')) physGradeSelect.value = 'Grade B';
+      else physGradeSelect.value = 'Below Grade';
+    }
+
+    const physRemarksInput = document.getElementById(`physRemarks-${procId}`);
+    if (physRemarksInput) {
+      physRemarksInput.value = `AI Score ${ai.confidenceScore}% (${ai.overallGrade}). Physical check confirmed.`;
     }
   } catch (e) {
     statusEl.textContent = 'AI service error: ' + e.message;
     alert('AI Analysis failed: ' + e.message);
   }
 }
+
+window.operatorQualityConfirm = async function(procId, result) {
+  try {
+    const inputs = document.querySelectorAll(`.quality-img-input-${procId}`);
+    const dataUrls = [];
+    inputs.forEach(inp => {
+      if (inp.dataset.base64) dataUrls.push(inp.dataset.base64);
+    });
+
+    const aiResultData = window.lastAiResults?.[procId] || null;
+
+    const physicalCheck = {
+      sampleInspected: document.getElementById(`physInspected-${procId}`)?.value === 'Yes',
+      cropCondition: document.getElementById(`physCondition-${procId}`)?.value || 'Good',
+      moistureLevel: Number(document.getElementById(`physMoisture-${procId}`)?.value || 12),
+      foreignMaterial: document.getElementById(`physForeign-${procId}`)?.value || 'None',
+      visibleDamage: document.getElementById(`physDamage-${procId}`)?.value || 'None',
+      pestDamage: document.getElementById(`physPest-${procId}`)?.value || 'None',
+      discoloration: document.getElementById(`physDiscolor-${procId}`)?.value || 'None',
+      grainQuality: document.getElementById(`physQuality-${procId}`)?.value || 'Good',
+      physicalWeight: Number(document.getElementById(`physWeight-${procId}`)?.value || 0),
+      remarks: document.getElementById(`physRemarks-${procId}`)?.value || '',
+      physicalGrade: document.getElementById(`physGrade-${procId}`)?.value || 'Grade A',
+      status: document.getElementById(`physStatus-${procId}`)?.value || 'Completed',
+      inspectedAt: new Date().toISOString()
+    };
+
+    const finalGradeVal = document.getElementById(`grade-${procId}`)?.value || physicalCheck.physicalGrade || 'Grade A';
+    const finalRemarksVal = document.getElementById(`physRemarks-${procId}`)?.value || 'Confirmed by Procurement Operator';
+
+    const finalDecision = {
+      confirmedByOperator: true,
+      operatorName: currentUser()?.name || 'Procurement Operator',
+      procurementCentreName: currentUser()?.centreId?.name || 'Procurement Centre',
+      finalGrade: finalGradeVal,
+      operatorRemarks: finalRemarksVal,
+      confirmedAt: new Date().toISOString()
+    };
+
+    await dapi('/operator/procurement/' + procId + '/quality', {
+      method: 'PATCH',
+      body: JSON.stringify({
+        result: result,
+        grade: finalGradeVal,
+        reason: finalRemarksVal,
+        observations: [finalRemarksVal],
+        images: dataUrls,
+        aiResult: aiResultData,
+        physicalCheck: physicalCheck,
+        finalDecision: finalDecision
+      })
+    });
+
+    alert(result === 'PASS' ? '✓ Final Quality Decision Confirmed by Operator! Sent to Digital Weighbridge.' : '✕ Quality rejected by operator.');
+    loadOperatorQuality();
+    if (typeof loadOperatorWeighment === 'function') loadOperatorWeighment();
+  } catch (e) {
+    alert('Error saving quality check: ' + e.message);
+  }
+};
 
 async function loadOperatorWeighment() {
   const box = document.getElementById('weighmentContent');
@@ -2475,7 +3188,7 @@ async function loadOperatorWeighment() {
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <div>
           <h3 style="margin:0;color:var(--green-950)">⚖ Digital Weighbridge Integration</h3>
-          <p class="small" style="margin:2px 0 0 0">Net Weight = Gross Weight - Tare Weight. Convert automatically to Quintals.</p>
+          <p class="small" style="margin:2px 0 0 0">Net Weight = Gross Weight - Tare Weight. Convert automatically to Tons.</p>
         </div>
         <span class="status-pill status-active">Digital Scale Live</span>
       </div>
@@ -2485,14 +3198,14 @@ async function loadOperatorWeighment() {
         const q = x.queue || {};
         const b = x.booking || {};
         const isWeighed = ['WEIGHED', 'PROCURED', 'COMPLETED'].includes(p.status);
-        const bookedKg = Number(b.quantity || 0) * 100;
+        const bookedKg = Number(b.quantity || 0) * 1000;
         const defaultGross = bookedKg + 1400;
 
         return `<div class="panel" style="margin-top:14px">
           <div style="display:flex;justify-content:space-between;align-items:flex-start">
             <div>
               <span class="eyebrow">TOKEN: ${escD(q.token)} · GATE PASS: ${escD(b.gatePassId || '—')}</span>
-              <h4 style="margin:4px 0 2px 0;font-size:1.1rem;color:var(--green-950)">🌾 ${escD(b.cropId?.name || 'Crop')} — Booked: ${b.quantity || 0} qtl</h4>
+              <h4 style="margin:4px 0 2px 0;font-size:1.1rem;color:var(--green-950)">🌾 ${escD(b.cropId?.name || 'Crop')} — Booked: ${b.quantity || 0} Tons</h4>
               <p style="margin:0;font-size:0.85rem;color:var(--ink-soft)">Farmer: <strong>${escD(q.farmerId?.userId?.name || 'Farmer')}</strong></p>
             </div>
             <span class="status-pill ${isWeighed ? 'status-active' : 'status-warn'}">${escD(p.status)}</span>
@@ -2515,9 +3228,9 @@ async function loadOperatorWeighment() {
                 </div>
               </div>
               <div>
-                <label>Procured Net Quantity (Quintals)</label>
+                <label>Procured Net Quantity (Tons)</label>
                 <div id="netQtlDisplay-${p._id}" style="font-size:1.2rem;font-weight:800;color:var(--green-950);padding:8px 0">
-                  ${p.acceptedQuantity || ((defaultGross - 1400) / 100).toFixed(2)} qtl
+                  ${p.acceptedQuantity || ((defaultGross - 1400) / 1000).toFixed(2)} Tons
                 </div>
               </div>
             </div>
@@ -2539,12 +3252,12 @@ function calcNetWeight(id) {
   const gross = Number(document.getElementById(`gross-${id}`)?.value || 0);
   const tare = Number(document.getElementById(`tare-${id}`)?.value || 0);
   const netKg = Math.max(0, gross - tare);
-  const netQtl = (netKg / 100).toFixed(2);
+  const netQtl = (netKg / 1000).toFixed(2);
   
   const kgEl = document.getElementById(`netKgDisplay-${id}`);
   const qtlEl = document.getElementById(`netQtlDisplay-${id}`);
   if (kgEl) kgEl.textContent = `${netKg} kg`;
-  if (qtlEl) qtlEl.textContent = `${netQtl} qtl`;
+  if (qtlEl) qtlEl.textContent = `${netQtl} Tons`;
 }
 
 function generateWeighbridgeSlipPDF(token, cropName, procId) {
@@ -2552,7 +3265,7 @@ function generateWeighbridgeSlipPDF(token, cropName, procId) {
   const gross = Number(document.getElementById(`gross-${procId}`)?.value || 3820);
   const tare = Number(document.getElementById(`tare-${procId}`)?.value || 1400);
   const netKg = Math.max(0, gross - tare);
-  const netQtl = (netKg / 100).toFixed(2);
+  const netQtl = (netKg / 1000).toFixed(2);
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'pt', format: [360, 480] });
@@ -3506,15 +4219,18 @@ window.loadOperatorCentreOverviewDetails=loadOperatorCentreOverviewDetails;
 window.loadOperatorQueue=loadOperatorQueue;
 window.loadOperatorQuality=loadOperatorQuality;
 window.loadOperatorWeighment=loadOperatorWeighment;
-window.loadOperatorProcurement=loadOperatorProcurement;
-window.loadOperatorCentreStatus=loadOperatorCentreStatus;
-window.loadOperatorReports=loadOperatorReports;
-window.previewQualityImage=previewQualityImage;
-window.runAIGrading=runAIGrading;
-window.calcNetWeight=calcNetWeight;
-window.loadOperators=loadOperators;
-window.loadTransporters=loadTransporters;
-window.generateWeighbridgeSlipPDF=generateWeighbridgeSlipPDF;
-window.generateProcurementReceiptPDF=generateProcurementReceiptPDF;
+window.loadOperatorPayments=loadOperatorPayments;
+window.renderOperatorPaymentsUI=renderOperatorPaymentsUI;
+window.openOperatorPaymentModal=openOperatorPaymentModal;
+window.switchPayMethodUI=switchPayMethodUI;
+window.closeOperatorPaymentModal=closeOperatorPaymentModal;
+window.proceedToPaymentConfirmation=proceedToPaymentConfirmation;
+window.backToPayEdit=backToPayEdit;
+window.submitFinalOperatorPayment=submitFinalOperatorPayment;
+window.viewPaymentReceiptModal=viewPaymentReceiptModal;
+window.downloadReceiptPDF=downloadReceiptPDF;
+window.loadFarmerPayments=loadFarmerPayments;
+window.renderPayments=renderPayments;
 
-setInterval(()=>{try{if(currentUser()?.role==='FARMER'&&document.visibilityState==='visible'){if(document.getElementById('section-overview')&&!document.getElementById('section-overview').classList.contains('hidden'))loadOverview();if(document.getElementById('section-queue')&&!document.getElementById('section-queue').classList.contains('hidden'))loadQueue();}}catch(e){}},15000);
+setInterval(()=>{try{if(currentUser()?.role==='FARMER'&&document.visibilityState==='visible'){if(document.getElementById('section-overview')&&!document.getElementById('section-overview').classList.contains('hidden'))loadOverview();if(document.getElementById('section-queue')&&!document.getElementById('section-queue').classList.contains('hidden'))loadQueue();if(document.getElementById('section-payments')&&!document.getElementById('section-payments').classList.contains('hidden'))loadFarmerPayments();}}catch(e){}},15000);
+

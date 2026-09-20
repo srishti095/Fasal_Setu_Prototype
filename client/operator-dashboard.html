@@ -36,6 +36,7 @@
                 <button class="side-link" data-section="quality">✓ Quality Check</button>
                 <button class="side-link" data-section="weighment">⚖ Weighment</button>
                 <button class="side-link" data-section="procurement">₹ Procurement</button>
+                <button class="side-link" data-section="operatorPayments">💳 Payments</button>
                 <button class="side-link" data-section="centreStatus">● Centre Status</button>
                 <button class="side-link" data-section="reports">▤ Reports</button>
                 <div class="side-section">Account</div>
@@ -117,6 +118,11 @@
                 <!-- PROCUREMENT MODULE -->
                 <section id="section-procurement" class="dash-section hidden">
                     <div id="procurementContent"></div>
+                </section>
+
+                <!-- PAYMENTS MODULE -->
+                <section id="section-operatorPayments" class="dash-section hidden">
+                    <div id="operatorPaymentsContent"></div>
                 </section>
 
                 <!-- CENTRE STATUS MODULE -->
@@ -245,9 +251,16 @@
             window.FasalSetuSocket=(function(){
                 try{
                     if(!window.io)return null;
-                    const socket=io((localStorage.getItem('fsApi')||'http://localhost:5000/api').replace(/\/api$/,''));
+                    const socket=io((localStorage.getItem('fsApi')||(window.location.origin + '/api')).replace(/\/api$/,''));
                     const u=JSON.parse(localStorage.getItem('fsUser')||'null');
                     if(u)socket.emit('joinCentre',u.id||u._id||u.centreId?._id||u.centreId);
+                    socket.on('paymentUpdated',()=>{
+                        try{
+                            if(typeof loadOverview==='function') loadOverview();
+                            if(typeof loadOperatorPayments==='function') loadOperatorPayments();
+                            if(typeof loadOperatorProcurement==='function') loadOperatorProcurement();
+                        }catch(e){}
+                    });
                     socket.on('queueUpdate',()=>{
                         try{
                             if(typeof loadOverview==='function') loadOverview();

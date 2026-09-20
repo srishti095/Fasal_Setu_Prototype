@@ -128,7 +128,7 @@ export const msp=async(req,res,next)=>{try{
   if(!c) throw Object.assign(new Error('Crop not found in government MSP catalogue'),{status:404});
 
   const qty=Number(req.query.quantity);
-  if(!Number.isFinite(qty)||qty<=0) throw Object.assign(new Error('Quantity must be a valid number greater than 0 quintals'),{status:400});
+  if(!Number.isFinite(qty)||qty<=0) throw Object.assign(new Error('Quantity must be a valid number greater than 0 Tons'),{status:400});
 
   ok(res,{crop:c.name,rate:c.procurementRate,marketReference:c.marketReferenceRate,expectedPayment:c.procurementRate*qty});
 }catch(e){fail(e,next)}};
@@ -143,7 +143,7 @@ export const book=async(req,res,next)=>{try{
     throw Object.assign(new Error('Valid procurement centre, crop and slot selection are required'),{status:400});
   }
   const qty = Number(quantity);
-  if(!Number.isFinite(qty)||qty<=0||qty>1000) throw Object.assign(new Error('Quantity must be between 0.01 and 1000 quintals'),{status:400});
+  if(!Number.isFinite(qty)||qty<=0||qty>1000) throw Object.assign(new Error('Quantity must be between 0.01 and 1000 Tons'),{status:400});
 
   const centre=await ProcurementCentre.findOne({_id:centreId,status:'ACTIVE'});
   if(!centre)throw Object.assign(new Error('Selected centre is currently not active for booking'),{status:409});
@@ -845,7 +845,8 @@ export const adminAuditLogs = async (req, res, next) => {
 
 async function runQualityCheckAI(cropName, images) {
   try {
-    const resp = await fetch('http://localhost:8000/analyze-json', {
+    const pythonBase = (env.PYTHON_SERVICE_URL || 'http://localhost:8000').replace(/\/$/, '');
+    const resp = await fetch(`${pythonBase}/analyze-json`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ crop: cropName, images })
@@ -1109,7 +1110,7 @@ export const qualityCheck=async(req,res,next)=>{try{
   const p=await Procurement.findOne({_id:req.params.id}).populate('bookingId farmerId cropId');
   if(!p)throw Object.assign(new Error('Procurement record not found'),{status:404});
 
-  const booking=await Booking.findOne({_id:p.bookingId._id,centreId:req.user.centreId});
+  const booking=await Booking.findOne({_id:p.bookingId._id,centreId:req.user.centreId}).populate('centreId');
   if(!booking)throw Object.assign(new Error('Procurement does not belong to your centre'),{status:403});
 
   const images = Array.isArray(req.body.images) ? req.body.images : [];
@@ -1120,13 +1121,13 @@ export const qualityCheck=async(req,res,next)=>{try{
   const cropName = p.cropId?.name || req.body.crop || 'Crop';
   const aiResult = await runQualityCheckAI(cropName, images);
 
-  const resultStatus = req.body.result || aiResult.result || 'PASS';
-  const grade = req.body.grade || aiResult.grade || 'Standard';
+  const resultStatus = req.body.result || req.body.finalDecision?.result || aiResult.result || 'PASS';
+  const grade = req.body.grade || req.body.finalDecision?.finalGrade || aiResult.grade || 'Standard';
 
   p.quality = {
     grade,
     result: resultStatus,
-    reason: req.body.reason || aiResult.recommendations || '',
+    reason: req.body.reason || req.body.finalDecision?.operatorRemarks || aiResult.recommendations || '',
     checkedAt: new Date(),
     images,
     confidence: aiResult.confidence || 92.5,
@@ -1134,16 +1135,57 @@ export const qualityCheck=async(req,res,next)=>{try{
     recommendations: aiResult.recommendations || ''
   };
 
+  if (req.body.physicalCheck) {
+    const pc = req.body.physicalCheck;
+    p.physicalCheck = {
+      sampleInspected: pc.sampleInspected || 'Yes',
+      cropCondition: pc.cropCondition || 'Good',
+      moistureLevel: Number(pc.moistureLevel || 12.0),
+      foreignMaterial: pc.foreignMaterial || 'None',
+      visibleDamage: pc.visibleDamage || 'None',
+      pestDamage: pc.pestDamage || 'None',
+      discoloration: pc.discoloration || 'None',
+      grainQuality: pc.grainQuality || 'Good',
+      physicalWeight: Number(pc.physicalWeight || p.bookingId?.quantity || 0),
+      remarks: pc.remarks || req.body.reason || '',
+      physicalGrade: pc.physicalGrade || grade,
+      status: 'Completed',
+      inspectedAt: new Date(),
+      operatorId: req.user.id
+    };
+  }
+
+  if (req.body.finalDecision) {
+    const fd = req.body.finalDecision;
+    p.finalDecision = {
+      confirmedByOperator: true,
+      operatorName: req.user.name || 'Procurement Operator',
+      procurementCentreName: booking.centreId?.name || 'Procurement Centre',
+      finalGrade: fd.finalGrade || grade,
+      operatorRemarks: fd.operatorRemarks || req.body.reason || '',
+      confirmedAt: new Date()
+    };
+  } else {
+    p.finalDecision = {
+      confirmedByOperator: true,
+      operatorName: req.user.name || 'Procurement Operator',
+      procurementCentreName: booking.centreId?.name || 'Procurement Centre',
+      finalGrade: grade,
+      operatorRemarks: req.body.reason || 'Confirmed by Procurement Operator',
+      confirmedAt: new Date()
+    };
+  }
+
   p.status = resultStatus==='PASS' ? 'QUALITY_PASSED' : 'QUALITY_REJECTED';
   await p.save();
 
   if(resultStatus==='PASS') {
-    await notify({userId:p.farmerId.userId,event:'QUALITY_PASSED',priority:'HIGH',title:'Quality check passed',message:`Produce passed quality check (${grade}). Proceeding to weighment.`,metadata:{procurementId:p._id}});
+    await notify({userId:p.farmerId.userId,event:'QUALITY_PASSED',priority:'HIGH',title:'Quality check passed',message:`Produce passed quality check (${grade}). Confirmed by operator. Proceeding to weighment.`,metadata:{procurementId:p._id}});
   } else {
     await notify({userId:p.farmerId.userId,event:'QUALITY_REJECTED',priority:'HIGH',title:'Quality check rejected',message:`Quality check marked REJECT. Reason: ${req.body.reason||'Defect threshold exceeded.'}`,metadata:{procurementId:p._id}});
   }
 
-  await AuditLog.create({actorId:req.user.id,action:'QUALITY_CHECK',entityType:'Procurement',entityId:p._id.toString(),metadata:p.quality});
+  await AuditLog.create({actorId:req.user.id,action:'QUALITY_CHECK',entityType:'Procurement',entityId:p._id.toString(),metadata:{quality:p.quality, physicalCheck:p.physicalCheck, finalDecision:p.finalDecision}});
   ok(res,p);
 }catch(e){fail(e,next)}};
 
@@ -1161,13 +1203,13 @@ export const recordWeighment=async(req,res,next)=>{try{
     throw Object.assign(new Error('Gross weight must be greater than tare weight'),{status:400});
   }
 
-  const acceptedQtl=Number((net/100).toFixed(2));
-  p.weighment={grossKg:gross,tareKg:tare,netKg:Number(net.toFixed(2)),acceptedQuantity:acceptedQtl,recordedAt:new Date()};
-  p.acceptedQuantity=acceptedQtl;
+  const acceptedTons=Number((net/1000).toFixed(2));
+  p.weighment={grossKg:gross,tareKg:tare,netKg:Number(net.toFixed(2)),acceptedQuantity:acceptedTons,recordedAt:new Date()};
+  p.acceptedQuantity=acceptedTons;
   p.status='WEIGHED';
   await p.save();
 
-  await notify({userId:p.farmerId.userId,event:'WEIGHMENT_RECORDED',priority:'HIGH',title:'Weighment recorded',message:`Net accepted weight recorded: ${acceptedQtl} quintals.`,metadata:{procurementId:p._id,acceptedQuantity:acceptedQtl}});
+  await notify({userId:p.farmerId.userId,event:'WEIGHMENT_RECORDED',priority:'HIGH',title:'Weighment recorded',message:`Net accepted weight recorded: ${acceptedTons} Tons.`,metadata:{procurementId:p._id,acceptedQuantity:acceptedTons}});
   ok(res,p);
 }catch(e){fail(e,next)}};
 
@@ -1197,43 +1239,165 @@ export const confirmProcurement=async(req,res,next)=>{try{
   let pay=await Payment.findOne({procurementId:p._id});
   if(!pay) {
     pay=await Payment.create({
-      farmerId:p.farmerId._id, procurementId:p._id, amount,
-      status:'INITIATED', reference:`FS-PAY-${Date.now().toString().slice(-8)}`,
-      initiatedAt:new Date(), mode:'DEMO_PFMS',
-      timeline:[{status:'INITIATED',label:'Payment initiated',at:new Date(),note:'Prototype payment workflow'}]
+      farmerId:p.farmerId._id,
+      bookingId:b._id,
+      procurementId:p._id,
+      centreId:b.centreId._id || b.centreId,
+      operatorId:req.user.id,
+      crop:p.cropId?.name||'Crop',
+      quantity:qty,
+      amount,
+      paymentMethod:'UPI',
+      mode:'UPI',
+      status:'PENDING',
+      reference:`FS-PAY-${Date.now().toString().slice(-8)}`,
+      initiatedAt:new Date(),
+      timeline:[{status:'PENDING',label:'Payment pending',at:new Date(),note:'Awaiting mandi operator payment processing'}]
     });
   } else {
-    pay.amount=amount;
-    pay.status='INITIATED';
-    pay.initiatedAt=new Date();
+    pay.bookingId = pay.bookingId || b._id;
+    pay.centreId = pay.centreId || b.centreId._id || b.centreId;
+    pay.crop = pay.crop || p.cropId?.name || 'Crop';
+    pay.quantity = qty;
+    pay.amount = amount;
     await pay.save();
   }
 
-  await notify({userId:p.farmerId.userId,event:'PROCUREMENT_CONFIRMED',priority:'HIGH',title:'Procurement confirmed',message:`${qty} quintals accepted. Bill ${p.billNo} generated. Payment initiated: ₹${amount.toLocaleString('en-IN')}.`,metadata:{procurementId:p._id,billNo:p.billNo,amount}});
+  await notify({userId:p.farmerId.userId,event:'PROCUREMENT_CONFIRMED',priority:'HIGH',title:'Procurement confirmed',message:`${qty} Tons accepted. Bill ${p.billNo} generated. Payment initiated: ₹${amount.toLocaleString('en-IN')}.`,metadata:{procurementId:p._id,billNo:p.billNo,amount}});
   await emitQueue(b.centreId._id);
   ok(res,{procurement:p,payment:pay});
 }catch(e){fail(e,next)}};
 
+export const operatorPayments=async(req,res,next)=>{try{
+  const centreId=req.user.centreId;
+  if(!centreId) throw Object.assign(new Error('No assigned procurement centre'),{status:403});
+
+  const procs = await Procurement.find({ status: { $in: ['PROCURED', 'COMPLETED'] } }).populate('bookingId cropId farmerId');
+  for (const pr of procs) {
+    if (pr.bookingId && String(pr.bookingId.centreId?._id || pr.bookingId.centreId) === String(centreId)) {
+      const existingPay = await Payment.findOne({ procurementId: pr._id });
+      if (!existingPay) {
+        const qty = Number(pr.weighment?.netKg ? (pr.weighment.netKg / 1000).toFixed(2) : pr.acceptedQuantity || 1);
+        const rate = Number(pr.rate || pr.cropId?.procurementRate || 2425);
+        const amt = Number((qty * rate).toFixed(2));
+        await Payment.create({
+          farmerId: pr.farmerId._id || pr.farmerId,
+          bookingId: pr.bookingId._id || pr.bookingId,
+          procurementId: pr._id,
+          centreId: centreId,
+          operatorId: req.user.id,
+          crop: pr.cropId?.name || 'Crop',
+          quantity: qty,
+          amount: amt,
+          paymentMethod: 'UPI',
+          status: 'PENDING',
+          reference: `FS-PAY-${Date.now().toString().slice(-8)}`,
+          initiatedAt: new Date(),
+          timeline: [{ status: 'PENDING', label: 'Payment pending', at: new Date(), note: 'Awaiting operator payment processing' }]
+        });
+      }
+    }
+  }
+
+  const payments = await Payment.find({ centreId })
+    .populate({ path: 'farmerId', populate: { path: 'userId' } })
+    .populate('bookingId')
+    .populate('procurementId')
+    .populate('centreId')
+    .sort({ createdAt: -1 });
+
+  ok(res, payments);
+}catch(e){fail(e,next)}};
+
 export const processPayment=async(req,res,next)=>{try{
-  const pay=await Payment.findById(req.params.id).populate('farmerId');
-  if(!pay)throw Object.assign(new Error('Payment not found'),{status:404});
-  if(pay.status==='PAID')return ok(res,pay);
-  if(!['INITIATED','PROCESSING'].includes(pay.status))throw Object.assign(new Error('Payment is not ready for processing'),{status:409});
+  const pay=await Payment.findById(req.params.id).populate({ path: 'farmerId', populate: { path: 'userId' } }).populate('bookingId procurementId centreId');
+  if(!pay)throw Object.assign(new Error('Payment record not found'),{status:404});
 
-  pay.status='PROCESSING';
-  pay.timeline=[...(pay.timeline||[]),{status:'PROCESSING',label:'Payment processing',at:new Date(),note:'Prototype settlement workflow'}];
-  pay.processedAt=new Date();
+  if(req.user.role === 'OPERATOR') {
+    const opCentreId = String(req.user.centreId || '');
+    const payCentreId = String(pay.centreId?._id || pay.centreId || pay.bookingId?.centreId || '');
+    if(opCentreId && payCentreId && opCentreId !== payCentreId) {
+      throw Object.assign(new Error('Unauthorized: Payment belongs to another procurement centre'), {status: 403});
+    }
+  }
+
+  const method = String(req.body.paymentMethod || req.body.mode || 'UPI').toUpperCase();
+  if(!['UPI', 'NET_BANKING', 'CASH'].includes(method)) {
+    throw Object.assign(new Error('Invalid payment method. Choose UPI, Net Banking, or Cash.'), {status: 400});
+  }
+
+  const txId = String(req.body.transactionId || req.body.utrNumber || req.body.receiptNumber || `REF-${Date.now().toString().slice(-8)}`).trim();
+  const receiptNo = String(req.body.receiptNumber || (method === 'CASH' ? `CASH-REC-${Date.now().toString().slice(-6)}` : `REC-${Date.now().toString().slice(-6)}`)).trim();
+  const remarks = String(req.body.remarks || `Payment processed via ${method}`).trim();
+  const pDate = req.body.paymentDate ? new Date(req.body.paymentDate) : new Date();
+  const pTime = String(req.body.paymentTime || new Date().toLocaleTimeString('en-IN')).trim();
+
+  pay.paymentMethod = method;
+  pay.mode = method;
+  pay.transactionId = txId;
+  pay.receiptNumber = receiptNo;
+  pay.paymentDate = pDate;
+  pay.paymentTime = pTime;
+  pay.remarks = remarks;
+  pay.operatorId = req.user.id;
+  pay.status = 'PAID';
+  pay.paidAt = new Date();
+  pay.reference = pay.reference || txId;
+  pay.timeline = [...(pay.timeline||[]), {
+    status: 'PAID',
+    label: `Payment recorded via ${method}`,
+    at: new Date(),
+    note: `Ref/Receipt: ${txId || receiptNo} · ${remarks}`
+  }];
+
   await pay.save();
 
-  await notify({userId:pay.farmerId.userId,event:'PAYMENT_PROCESSING',title:'Payment processing',message:`Payment of ₹${Number(pay.amount||0).toLocaleString('en-IN')} is being processed.`,metadata:{paymentId:pay._id}});
-  pay.status='PAID';
-  pay.paidAt=new Date();
-  pay.reference=pay.reference||`FS-PAY-${Date.now().toString().slice(-8)}`;
-  pay.timeline=[...(pay.timeline||[]),{status:'PAID',label:'Bank credited (demo)',at:new Date(),note:'Prototype payment completion'}];
-  await pay.save();
+  if(pay.procurementId) {
+    await Procurement.findByIdAndUpdate(pay.procurementId._id || pay.procurementId, { status: 'COMPLETED' });
+  }
+  if(pay.bookingId) {
+    await Booking.findByIdAndUpdate(pay.bookingId._id || pay.bookingId, { status: 'COMPLETED' });
+  }
 
-  await notify({userId:pay.farmerId.userId,event:'PAYMENT_PAID',priority:'HIGH',title:'Payment completed',message:`₹${Number(pay.amount||0).toLocaleString('en-IN')} payment is marked paid in prototype.`,metadata:{paymentId:pay._id,reference:pay.reference}});
-  ok(res,pay);
+  const farmerUserId = pay.farmerId?.userId?._id || pay.farmerId?.userId;
+  if(farmerUserId) {
+    await notify({
+      userId: farmerUserId,
+      event: 'PAYMENT_PAID',
+      priority: 'HIGH',
+      title: 'Payment Received',
+      message: `Your procurement payment of ₹${Number(pay.amount||0).toLocaleString('en-IN')} for ${pay.quantity||''} Tons of ${pay.crop||'Crop'} has been recorded successfully via ${method}.`,
+      metadata: { paymentId: pay._id, reference: pay.reference, amount: pay.amount, method }
+    });
+
+    const io = globalThis.__fasalSetuIO;
+    if(io) {
+      io.to(`farmer:${String(farmerUserId)}`).emit('notification', { title: 'Payment Received', message: `₹${Number(pay.amount||0).toLocaleString('en-IN')} recorded.` });
+      io.emit('paymentUpdate', { paymentId: pay._id, status: 'PAID' });
+    }
+  }
+
+  ok(res, pay);
+}catch(e){fail(e,next)}};
+
+export const getFarmerPayments=async(req,res,next)=>{try{
+  const f = await Farmer.findOne({userId:req.user.id});
+  if(!f) return ok(res, []);
+  const payments = await Payment.find({farmerId:f._id})
+    .populate({path:'procurementId',populate:{path:'cropId'}})
+    .populate('bookingId')
+    .populate('centreId')
+    .sort({createdAt:-1});
+  ok(res, payments);
+}catch(e){fail(e,next)}};
+
+export const getPaymentByBooking=async(req,res,next)=>{try{
+  const pay = await Payment.findOne({bookingId:req.params.bookingId})
+    .populate({path:'farmerId',populate:{path:'userId'}})
+    .populate('procurementId')
+    .populate('centreId');
+  if(!pay) throw Object.assign(new Error('Payment not found for this booking'),{status:404});
+  ok(res, pay);
 }catch(e){fail(e,next)}};
 
 export const centreStatus=async(req,res,next)=>{try{
@@ -1523,7 +1687,7 @@ export const bookTransport=async(req,res,next)=>{try{
   const t=await User.findOne({_id:transporterId,role:'LOGISTICS','transportProfile.isListed':true});
   if(!t)throw Object.assign(new Error('Transporter is not currently listed by Admin'),{status:404});
 
-  if(Number(quantity)>Number(t.transportProfile?.capacityQtl||0))throw Object.assign(new Error(`Quantity (${quantity} qtl) exceeds trolley capacity (${t.transportProfile?.capacityQtl||0} qtl)`),{status:400});
+  if(Number(quantity)>Number(t.transportProfile?.capacityQtl||0))throw Object.assign(new Error(`Quantity (${quantity} Tons) exceeds trolley capacity (${t.transportProfile?.capacityQtl||0} Tons)`),{status:400});
 
   const existing=await TransportBooking.findOne({farmerId:f._id,bookingId,status:{$in:['REQUESTED','ACCEPTED','DRIVER_EN_ROUTE','PICKED_UP','IN_TRANSIT']}});
   if(existing)throw Object.assign(new Error('An active trolley booking already exists for this procurement booking'),{status:409});
@@ -1589,22 +1753,42 @@ General Rules:
 - Answer the actual question directly.
 - Keep answers concise (2-4 sentences).`;
 
-  const prompt=`${ASSISTANT_SYSTEM_PROMPT}\n\n${dynamicInstruction}\n\nFarmer question: ${question}`;
-  const model=encodeURIComponent(env.GEMINI_MODEL);
-  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-goog-api-key':env.GEMINI_API_KEY},
-    body:JSON.stringify({
-      contents:[{role:'user',parts:[{text:prompt}]}],
-      generationConfig:{temperature:0.3,maxOutputTokens:300}
-    })
-  });
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok){
-    const apiMessage=data?.error?.message||'Gemini AI request failed';
-    throw Object.assign(new Error(apiMessage),{status:502});
+  const contextPage = String(req.body?.contextPage || req.body?.context || '').trim();
+  const contextStr = contextPage ? `Farmer current section context: "${contextPage}". If the farmer asks how to do something or what to do next, relate your answer directly to this section.` : '';
+  const prompt=`${ASSISTANT_SYSTEM_PROMPT}\n\n${dynamicInstruction}\n\n${contextStr}\n\nFarmer question: ${question}`;
+  const modelsToTry = [env.GEMINI_MODEL, 'gemini-1.5-flash', 'gemini-2.0-flash'].filter((v,i,a)=>v&&a.indexOf(v)===i);
+  let lastErr = null;
+  let answer = '';
+  let usedModel = env.GEMINI_MODEL;
+
+  for(const targetModel of modelsToTry) {
+    try {
+      const modelEnc = encodeURIComponent(targetModel);
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelEnc}:generateContent`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-goog-api-key':env.GEMINI_API_KEY},
+        body:JSON.stringify({
+          contents:[{role:'user',parts:[{text:prompt}]}],
+          generationConfig:{temperature:0.3,maxOutputTokens:300}
+        })
+      });
+      const data = await r.json().catch(()=>({}));
+      if(r.ok && data?.candidates?.[0]?.content?.parts) {
+        answer = data.candidates[0].content.parts.map(p=>p?.text||'').join('').trim();
+        if(answer) {
+          usedModel = targetModel;
+          break;
+        }
+      } else if (data?.error?.message) {
+        lastErr = data.error.message;
+      }
+    } catch(err) {
+      lastErr = err.message;
+    }
   }
-  const answer=data?.candidates?.[0]?.content?.parts?.map(p=>p?.text||'').join('').trim();
-  if(!answer)throw Object.assign(new Error('Gemini returned an empty answer'),{status:502});
-  ok(res,{answer,language:lang,source:'gemini',model:env.GEMINI_MODEL});
+
+  if(!answer) {
+    throw Object.assign(new Error(lastErr || 'Gemini returned an empty answer'), {status: 502});
+  }
+  ok(res,{answer,language:lang,source:'gemini',model:usedModel});
 }catch(e){fail(e,next)}};

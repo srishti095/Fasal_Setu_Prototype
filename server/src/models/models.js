@@ -29,10 +29,58 @@ export const Booking=model('Booking',new Schema({farmerId:{...ref,ref:'Farmer'},
 export const QueueEntry=model('QueueEntry',new Schema({farmerId:{...ref,ref:'Farmer'},centreId:{...ref,ref:'ProcurementCentre'},slotId:{...ref,ref:'Slot'},token:{type:String,unique:true},position:Number,status:{type:String,default:'WAITING'},estimatedWait:Number,expectedTurn:Date,checkedInAt:Date,calledAt:Date,completedAt:Date},{timestamps:true}));
 export const Procurement=model('Procurement',new Schema({
   farmerId:{...ref,ref:'Farmer'},bookingId:{...ref,ref:'Booking'},cropId:{...ref,ref:'Crop'},acceptedQuantity:Number,rate:Number,
-  status:{type:String,default:'SLOT_BOOKED'},billNo:String,quality:{grade:String,result:String,reason:String,checkedAt:Date,images:[String],confidence:Number,observations:[String],recommendations:String},weighment:{grossKg:Number,tareKg:Number,netKg:Number,acceptedQuantity:Number,recordedAt:Date},
+  status:{type:String,default:'SLOT_BOOKED'},billNo:String,
+  quality:{grade:String,result:String,reason:String,checkedAt:Date,images:[String],confidence:Number,observations:[String],recommendations:String},
+  physicalCheck:{
+    sampleInspected:String,
+    cropCondition:String,
+    moistureLevel:Number,
+    foreignMaterial:String,
+    visibleDamage:String,
+    pestDamage:String,
+    discoloration:String,
+    grainQuality:String,
+    physicalWeight:Number,
+    remarks:String,
+    physicalGrade:String,
+    status:{type:String,default:'Pending'},
+    inspectedAt:Date,
+    operatorId:ref
+  },
+  finalDecision:{
+    confirmedByOperator:Boolean,
+    operatorName:String,
+    procurementCentreName:String,
+    finalGrade:String,
+    operatorRemarks:String,
+    confirmedAt:Date
+  },
+  weighment:{grossKg:Number,tareKg:Number,netKg:Number,acceptedQuantity:Number,recordedAt:Date},
   confirmedAt:Date
 },{timestamps:true}));
-export const Payment=model('Payment',new Schema({farmerId:{...ref,ref:'Farmer'},procurementId:{...ref,ref:'Procurement'},amount:Number,status:{type:String,default:'PENDING'},reference:String,initiatedAt:Date,processedAt:Date,paidAt:Date,mode:{type:String,default:'DEMO_PFMS'},timeline:[{status:String,label:String,at:Date,note:String}]},{timestamps:true}));
+export const Payment=model('Payment',new Schema({
+  farmerId:{...ref,ref:'Farmer',required:true},
+  bookingId:{...ref,ref:'Booking'},
+  procurementId:{...ref,ref:'Procurement'},
+  centreId:{...ref,ref:'ProcurementCentre'},
+  operatorId:{...ref,ref:'User'},
+  crop:String,
+  quantity:Number,
+  amount:{type:Number,required:true},
+  paymentMethod:{type:String,enum:['UPI','NET_BANKING','CASH','DEMO_PFMS'],default:'UPI'},
+  mode:{type:String,default:'UPI'},
+  status:{type:String,enum:['PENDING','PROCESSING','PAID','FAILED','REJECTED'],default:'PENDING'},
+  transactionId:String,
+  receiptNumber:String,
+  paymentDate:Date,
+  paymentTime:String,
+  remarks:String,
+  reference:String,
+  initiatedAt:Date,
+  processedAt:Date,
+  paidAt:Date,
+  timeline:[{status:String,label:String,at:Date,note:String}]
+},{timestamps:true}));
 export const Notification=model('Notification',new Schema({userId:{...ref,ref:'User',required:true},channel:{type:String,default:'IN_APP'},event:String,priority:{type:String,default:'NORMAL'},title:String,message:String,read:{type:Boolean,default:false},readAt:Date,metadata:Schema.Types.Mixed},{timestamps:true}));
 export const Grievance=model('Grievance',new Schema({farmerId:ref,category:String,subject:String,description:String,status:{type:String,default:'OPEN'},dueAt:Date,escalatedAt:Date},{timestamps:true}));
 export const Trip=model('Trip',new Schema({tripId:{type:String,unique:true},operatorId:ref,fromCentreId:{...ref,ref:'ProcurementCentre'},destination:String,crop:String,quantity:Number,vehicleNo:String,status:{type:String,default:'PLANNED'}},{timestamps:true}));

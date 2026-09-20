@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const apiBase=(localStorage.getItem('fsApi')||'http://localhost:5000/api').replace(/\/$/,'');
+  const apiBase=(localStorage.getItem('fsApi')||(window.location.origin + '/api')).replace(/\/$/,'');
   const langEl=document.getElementById('ketanLanguage');
   const input=document.getElementById('ketanInput');
   const messages=document.getElementById('ketanMessages');
@@ -210,10 +210,12 @@
       const token=localStorage.getItem('fsToken');
       const h={'Content-Type':'application/json'};
       if(token) h.Authorization='Bearer '+token;
+      const activeSection=document.querySelector('.dash-section:not(.hidden)');
+      const contextPage=activeSection ? (activeSection.id || '').replace('section-','') : (window.location.pathname.split('/').pop() || 'main');
       const r=await fetch(apiBase+'/public/ask',{
         method:'POST',
         headers:h,
-        body:JSON.stringify({question:q, language:resLang, lang:resLang}),
+        body:JSON.stringify({question:q, language:resLang, lang:resLang, contextPage:contextPage}),
         signal:controller.signal
       });
       let d={};try{d=await r.json()}catch{}
